@@ -442,3 +442,129 @@ body.weather-rain .weather-icon {
     }
 
 }
+
+/* ==========================================
+   CHOMA WEATHER - RAIN ALERT DESIGN
+   TIVANNAH INNOVATIONS
+========================================== */
+
+.rain-alert-panel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.4s ease;
+}
+
+.rain-alert-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px;
+    margin-top: 12px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+}
+
+.rain-alert-icon {
+    font-size: 42px;
+    min-width: 55px;
+    text-align: center;
+    animation: rainIconFloat 3s ease-in-out infinite;
+}
+
+.rain-alert-text {
+    flex: 1;
+}
+
+.rain-alert-text strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 7px;
+    color: #ffffff;
+}
+
+.rain-alert-text p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #dceaff;
+}
+
+/* CLEAR WEATHER */
+
+.rain-alert-panel.alert-clear .rain-alert-content {
+    background: rgba(34,197,94,0.13);
+    border: 1px solid rgba(34,197,94,0.35);
+}
+
+/* POSSIBLE SHOWERS */
+
+.rain-alert-panel.alert-possible .rain-alert-content {
+    background: rgba(250,204,21,0.13);
+    border: 1px solid rgba(250,204,21,0.4);
+}
+
+/* RAIN LIKELY */
+
+.rain-alert-panel.alert-rain .rain-alert-content {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.45);
+}
+
+/* THUNDERSTORM */
+
+.rain-alert-panel.alert-storm .rain-alert-content {
+    background: rgba(139,92,246,0.17);
+    border: 1px solid rgba(139,92,246,0.5);
+    animation: stormAlertGlow 2s ease-in-out infinite;
+}
+
+/* ICON ANIMATION */
+
+@keyframes rainIconFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* STORM WARNING ANIMATION */
+
+@keyframes stormAlertGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(139,92,246,0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(139,92,246,0.25);
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+
+    .rain-alert-content {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .rain-alert-icon {
+        font-size: 34px;
+        min-width: 40px;
+    }
+
+    .rain-alert-text strong {
+        font-size: 16px;
+    }
+
+    .rain-alert-text p {
+        font-size: 12px;
+    }
+
+}
