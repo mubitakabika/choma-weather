@@ -14,3 +14,431 @@ footer{text-align:center;color:#a9c5e3;font-size:11px;padding:20px 5px}footer a{
 @media(max-width:430px){.app{padding:12px}.hero{padding:18px 14px}.temp{font-size:58px}.stats{gap:6px}.stat{padding:10px 4px}.today-summary{grid-template-columns:repeat(2,1fr)}.day{grid-template-columns:1fr 35px .65fr 1fr .55fr;gap:4px;padding:8px}.rain{font-size:10px}.section-title h2{font-size:16px}}
 
 .select-label{display:block;color:#bad2e9;font-size:12px;margin:0 0 8px}.summary-controls{display:flex;gap:8px}.summary-controls select{min-width:0;flex:1;color:#f4f9ff;background:#092c5b;border:1px solid #4a83b8;border-radius:12px;padding:12px;font:inherit}.summary-controls button{background:#36b9e9;color:#06234b;border:0;border-radius:12px;padding:0 14px;font-weight:700;cursor:pointer}.story{margin-top:14px;background:rgba(1,16,43,.35);border-left:3px solid #50d4f5;border-radius:12px;padding:14px;line-height:1.65;font-size:14px;min-height:74px}.story-note{font-size:10px;color:#9ebbd8;margin:9px 2px 0}.footer-brand strong{letter-spacing:1.4px;color:#fff}@media(max-width:380px){.summary-controls{flex-direction:column}.summary-controls button{padding:12px}}
+/* =========================================
+   TIVANNAH INNOVATIONS
+   CHOMA WEATHER - ANIMATED WEATHER EFFECTS
+========================================= */
+
+/* Smooth weather transitions */
+body {
+    transition:
+        background 2s ease,
+        filter 2s ease;
+    overflow-x: hidden;
+}
+
+/* Keep app above animated background */
+.app {
+    position: relative;
+    z-index: 2;
+}
+
+/* Animated atmosphere */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+
+    background:
+        radial-gradient(
+            ellipse at 15% 20%,
+            rgba(255,255,255,.16),
+            transparent 35%
+        ),
+        radial-gradient(
+            ellipse at 80% 10%,
+            rgba(110,200,255,.13),
+            transparent 40%
+        );
+
+    animation: atmosphereMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes atmosphereMove {
+    0% {
+        transform: scale(1) translateX(-2%);
+    }
+
+    100% {
+        transform: scale(1.15) translateX(2%);
+    }
+}
+
+/* =========================================
+   MOVING CLOUDS
+========================================= */
+
+.weather-clouds {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cloud {
+    position: absolute;
+    width: 220px;
+    height: 75px;
+    background: rgba(255,255,255,.12);
+    border-radius: 100px;
+    filter: blur(2px);
+    animation: cloudMove linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 100px;
+    height: 100px;
+    top: -40px;
+    left: 35px;
+}
+
+.cloud::after {
+    width: 130px;
+    height: 120px;
+    top: -55px;
+    right: 25px;
+}
+
+.cloud-one {
+    top: 12%;
+    left: -250px;
+    animation-duration: 65s;
+}
+
+.cloud-two {
+    top: 32%;
+    left: -300px;
+    transform: scale(.7);
+    animation-duration: 95s;
+    animation-delay: -30s;
+}
+
+.cloud-three {
+    top: 55%;
+    left: -250px;
+    transform: scale(1.2);
+    animation-duration: 80s;
+    animation-delay: -20s;
+}
+
+@keyframes cloudMove {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 500px));
+    }
+}
+
+/* =========================================
+   SUN GLOW
+========================================= */
+
+.sun-glow {
+    position: fixed;
+    top: -120px;
+    right: -100px;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,220,100,.35) 0%,
+            rgba(255,190,70,.15) 35%,
+            transparent 70%
+        );
+
+    animation: sunPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes sunPulse {
+    0% {
+        transform: scale(.9);
+        opacity: .6;
+    }
+
+    100% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+/* Sunny weather */
+
+body.weather-sunny {
+    background:
+        radial-gradient(
+            circle at 85% 5%,
+            #f7a928 0,
+            #277fbe 25%,
+            #08346b 65%,
+            #041630 100%
+        );
+}
+
+/* =========================================
+   RAIN
+========================================= */
+
+.rain-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
+
+body.weather-rain .rain-layer {
+    opacity: 1;
+}
+
+.raindrops {
+    position: absolute;
+    inset: -100px 0 0 0;
+
+    background-image:
+        repeating-linear-gradient(
+            115deg,
+            transparent 0px,
+            transparent 9px,
+            rgba(190,225,255,.25) 10px,
+            rgba(190,225,255,.25) 11px,
+            transparent 12px,
+            transparent 24px
+        );
+
+    background-size: 100px 180px;
+
+    animation: rainFall .55s linear infinite;
+}
+
+.raindrops-two {
+    opacity: .35;
+    background-size: 65px 140px;
+    animation-duration: .35s;
+}
+
+@keyframes rainFall {
+    from {
+        transform: translateY(-100px);
+    }
+
+    to {
+        transform: translateY(180px);
+    }
+}
+
+/* Rainy atmosphere */
+
+body.weather-rain {
+    background:
+        linear-gradient(
+            180deg,
+            #354c69 0%,
+            #193858 40%,
+            #071a34 100%
+        );
+}
+
+/* =========================================
+   CLOUDY WEATHER
+========================================= */
+
+body.weather-cloudy {
+    background:
+        linear-gradient(
+            180deg,
+            #587b9d 0%,
+            #24486f 45%,
+            #071a36 100%
+        );
+}
+
+body.weather-cloudy .cloud {
+    opacity: .65;
+}
+
+/* =========================================
+   THUNDERSTORM
+========================================= */
+
+body.weather-storm {
+    background:
+        linear-gradient(
+            180deg,
+            #202a3b 0%,
+            #111e33 45%,
+            #030c1c 100%
+        );
+}
+
+body.weather-storm .rain-layer {
+    opacity: 1;
+}
+
+body.weather-storm {
+    animation: stormFlash 9s infinite;
+}
+
+@keyframes stormFlash {
+    0%, 93%, 96%, 100% {
+        filter: brightness(1);
+    }
+
+    94% {
+        filter: brightness(1.8);
+    }
+
+    95% {
+        filter: brightness(1.1);
+    }
+}
+
+/* =========================================
+   PARTLY CLOUDY
+========================================= */
+
+body.weather-partly {
+    background:
+        radial-gradient(
+            circle at 85% 8%,
+            #f7c65b 0,
+            #3e91c8 28%,
+            #0b3970 65%,
+            #041630 100%
+        );
+}
+
+/* =========================================
+   HOT WEATHER
+========================================= */
+
+body.weather-hot .sun-glow {
+    width: 450px;
+    height: 450px;
+    opacity: 1;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,230,100,.42),
+            rgba(255,155,40,.2) 40%,
+            transparent 72%
+        );
+}
+
+/* =========================================
+   WEATHER ICON ANIMATIONS
+========================================= */
+
+.weather-icon {
+    animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Rain icons */
+
+body.weather-rain .weather-icon {
+    animation: rainIcon 2s ease-in-out infinite;
+}
+
+@keyframes rainIcon {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+/* =========================================
+   PANEL HOVER EFFECTS
+========================================= */
+
+.panel {
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+@media (hover:hover) {
+    .panel:hover {
+        transform: translateY(-3px);
+        border-color: rgba(120,220,255,.4);
+        box-shadow:
+            0 20px 45px rgba(0,0,0,.24),
+            0 0 20px rgba(70,180,255,.08);
+    }
+}
+
+/* =========================================
+   BUTTON ANIMATIONS
+========================================= */
+
+.refresh {
+    transition:
+        transform .3s ease,
+        background .3s ease;
+}
+
+.refresh:hover {
+    background: rgba(255,255,255,.25);
+    transform: rotate(25deg);
+}
+
+.summary-controls button {
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.summary-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,.2);
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+
+}
