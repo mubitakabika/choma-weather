@@ -45,8 +45,8 @@ function generateSummary(date,h,d){
  const ids=h.time.map((t,i)=>t.slice(0,10)===date?i:-1).filter(i=>i>=0);if(!ids.length){$('weatherStory').textContent='Hourly forecast data is unavailable for this day.';return}
  const max=Math.round(d.temperature_2m_max[di]),min=Math.round(d.temperature_2m_min[di]);const peak=ids.reduce((best,i)=>h.temperature_2m[i]>h.temperature_2m[best]?i:best,ids[0]);const peakTime=fmtTime(h.time[peak]);const label=new Date(date+'T12:00:00').toLocaleDateString('en-ZM',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
  let mood=max>=32?'very hot':max>=28?'hot':max>=24?'warm':max>=19?'mild':'cool';
- const rain=ids.filter(i=>(h.precipitation_probability[i]||0)>=45||(h.precipitation[i]||0)>=0.3);const groups=[];
- rain.forEach(i=>{let last=groups[groups.length-1];if(last&&i-last[last.length-1]<=1)last.push(i);else groups.push([i])});
+const rain=ids.filter(i=>(h.precipitation_probability[i]||0)>=45);const groups=[];
+  rain.forEach(i=>{let last=groups[groups.length-1];if(last&&i-last[last.length-1]<=1)last.push(i);else groups.push([i])});
  const rainSummary=groups.length?groups.map(g=>{let chance=Math.max(...g.map(i=>h.precipitation_probability[i]||0));let phrase=chance>=70?'rain or showers are likely':'showers are possible';return `${phrase} from around ${fmtTime(h.time[g[0]])} to ${fmtTime(h.time[g[g.length-1]])} (chance up to ${chance}%)`}).join('; '):'no significant rain is indicated in the hourly forecast';
  const evening=ids.filter(i=>Number(h.time[i].slice(11,13))>=17);const eveningT=evening.length?Math.round(h.temperature_2m[evening[evening.length-1]]):min;
  const count={};ids.forEach(i=>{const desc=w(h.weather_code[i])[1].toLowerCase();count[desc]=(count[desc]||0)+1});const common=Object.entries(count).sort((a,b)=>b[1]-a[1])[0][0];
