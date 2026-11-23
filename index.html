@@ -3,31 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Choma Weather | Weather Forecast for Choma, Zambia</title>
 
-<meta name="description" content="Choma Weather provides local weather forecasts, temperature updates, rain alerts and daily weather information for Choma, Zambia.">
+  <meta name="description" content="Choma Weather provides local weather forecasts, temperature updates, rain alerts and daily weather information for Choma, Zambia.">
 
-<meta name="application-name" content="Choma Weather">
-
-<meta name="apple-mobile-web-app-title" content="Choma Weather">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="Choma Weather">
-<meta property="og:site_name" content="Choma Weather">
-<meta property="og:description" content="Your trusted local weather forecast for Choma, Zambia.">
-<meta property="og:url" content="https://mubitakabika.github.io/choma-weather/">
-<meta property="og:image" content="https://mubitakabika.github.io/choma-weather/icon.svg">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Choma Weather">
-<meta name="twitter:description" content="Your trusted local weather forecast for Choma, Zambia.">
+  <meta name="application-name" content="Choma Weather">
+  <meta name="apple-mobile-web-app-title" content="Choma Weather">
   <meta name="theme-color" content="#061d45">
-  <meta name="description" content="Live weather and forecasts for Choma, Zambia.">
-  <title>Choma Weather</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Choma Weather">
+  <meta property="og:site_name" content="Choma Weather">
+  <meta property="og:description" content="Your trusted local weather forecast for Choma, Zambia.">
+  <meta property="og:url" content="https://mubitakabika.github.io/choma-weather/">
+  <meta property="og:image" content="https://mubitakabika.github.io/choma-weather/icon.svg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Choma Weather">
+  <meta name="twitter:description" content="Your trusted local weather forecast for Choma, Zambia.">
+
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .install-area {
+      text-align: center;
+      margin: 15px 0 22px;
+    }
+
+    .install-button {
+      display: none;
+      width: 100%;
+      padding: 15px 20px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #50d4f5, #168bd1);
+      color: #061d45;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,.18);
+    }
+
+    .install-button.visible {
+      display: block;
+    }
+
+    .install-help {
+      display: none;
+      margin-top: 10px;
+      color: #dceaff;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .install-help.visible {
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
 
   <div class="weather-clouds">
@@ -42,34 +80,98 @@
     <div class="raindrops"></div>
     <div class="raindrops raindrops-two"></div>
   </div>
+
   <main class="app">
+
     <header class="topbar">
-      <div class="brand"><span class="brand-icon">🌦️</span><div><strong>CHOMA WEATHER</strong><small>Know Your Weather</small></div></div>
+      <div class="brand">
+        <span class="brand-icon">🌦️</span>
+        <div>
+          <strong>CHOMA WEATHER</strong>
+          <small>Know Your Weather</small>
+        </div>
+      </div>
+
       <button id="refreshBtn" class="refresh" aria-label="Refresh weather">↻</button>
     </header>
 
+    <!-- APP INSTALLATION -->
+    <div class="install-area">
+      <button id="installBtn" class="install-button">
+        📲 INSTALL CHOMA WEATHER
+      </button>
+
+      <div id="installHelp" class="install-help"></div>
+    </div>
+
     <section class="hero">
-      <div class="location"><span class="pin">📍</span> Choma, Zambia <span class="live-dot"></span><span class="live-label">LIVE</span></div>
+
+      <div class="location">
+        <span class="pin">📍</span>
+        Choma, Zambia
+        <span class="live-dot"></span>
+        <span class="live-label">LIVE</span>
+      </div>
+
       <div class="updated" id="updated">Getting the latest weather…</div>
+
       <div class="current">
         <div class="weather-icon" id="weatherIcon">⛅</div>
-        <div><div class="temp" id="temperature">--°</div><div class="condition" id="condition">Loading…</div></div>
+        <div>
+          <div class="temp" id="temperature">--°</div>
+          <div class="condition" id="condition">Loading…</div>
+        </div>
       </div>
-      <div class="feels">Feels like <span id="feels">--°C</span></div>
+
+      <div class="feels">
+        Feels like <span id="feels">--°C</span>
+      </div>
+
       <div class="stats">
-        <div class="stat"><span>💧</span><small>Humidity</small><strong id="humidity">--%</strong></div>
-        <div class="stat"><span>🌬️</span><small>Wind</small><strong id="wind">-- km/h</strong></div>
-        <div class="stat"><span>🌡️</span><small>Pressure</small><strong id="pressure">-- hPa</strong></div>
-        <div class="stat"><span>☀️</span><small>UV Index</small><strong id="uv">--</strong></div>
+        <div class="stat">
+          <span>💧</span>
+          <small>Humidity</small>
+          <strong id="humidity">--%</strong>
+        </div>
+
+        <div class="stat">
+          <span>🌬️</span>
+          <small>Wind</small>
+          <strong id="wind">-- km/h</strong>
+        </div>
+
+        <div class="stat">
+          <span>🌡️</span>
+          <small>Pressure</small>
+          <strong id="pressure">-- hPa</strong>
+        </div>
+
+        <div class="stat">
+          <span>☀️</span>
+          <small>UV Index</small>
+          <strong id="uv">--</strong>
+        </div>
       </div>
+
     </section>
 
     <section class="panel">
-      <div class="section-title"><h2>Today's outlook</h2><span id="todayDate"></span></div>
-      <div class="today-summary"><div><span>Sunrise</span><strong id="sunrise">--:--</strong></div><div><span>Sunset</span><strong id="sunset">--:--</strong></div><div><span>Rain chance</span><strong id="rainToday">--%</strong></div><div><span>Rain total</span><strong id="rainAmount">-- mm</strong></div></div>
+      <div class="section-title">
+        <h2>Today's outlook</h2>
+        <span id="todayDate"></span>
+      </div>
+
+      <div class="today-summary">
+        <div><span>Sunrise</span><strong id="sunrise">--:--</strong></div>
+        <div><span>Sunset</span><strong id="sunset">--:--</strong></div>
+        <div><span>Rain chance</span><strong id="rainToday">--%</strong></div>
+        <div><span>Rain total</span><strong id="rainAmount">-- mm</strong></div>
+      </div>
     </section>
-        <!-- RAIN ALERT -->
+
+    <!-- RAIN ALERT -->
     <section class="panel rain-alert-panel" id="rainAlertPanel">
+
       <div class="section-title">
         <h2>🌧️ Rain Alert</h2>
         <span>Next 6 hours</span>
@@ -77,64 +179,132 @@
 
       <div class="rain-alert-content" id="rainAlert">
         <div class="rain-alert-icon">🌤️</div>
+
         <div class="rain-alert-text">
           <strong>Checking rain forecast...</strong>
           <p>Please wait while we analyse the upcoming weather.</p>
         </div>
       </div>
+
     </section>
 
-    <!-- ==========================================
-     RAIN ALERT
-========================================== -->
-
-<section class="panel rain-alert-panel" id="rainAlertPanel">
-
-    <div class="section-title">
-        <h2>🌧️ Rain Alert</h2>
-        <span>Next 6 hours</span>
-    </div>
-
-    <div class="rain-alert-content" id="rainAlert">
-
-        <div class="rain-alert-icon">🌤️</div>
-
-        <div class="rain-alert-text">
-
-            <strong>Checking rain forecast...</strong>
-
-            <p>
-                Please wait while we analyse the upcoming weather.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
     <section class="panel">
-      <div class="section-title"><h2>Next 24 hours</h2><span>Hourly forecast</span></div>
+      <div class="section-title">
+        <h2>Next 24 hours</h2>
+        <span>Hourly forecast</span>
+      </div>
+
       <div class="hourly" id="hourly"></div>
     </section>
 
     <section class="panel story-panel">
-      <div class="section-title"><h2>Weather Summary</h2><span>Forecast explained</span></div>
-      <label class="select-label" for="summaryDate">Choose a day to read its forecast</label>
-      <div class="summary-controls"><select id="summaryDate" aria-label="Choose forecast date"></select><button id="summaryBtn">Generate summary</button></div>
-      <div class="story" id="weatherStory">Select a day to generate a detailed weather summary.</div>
-      <p class="story-note">This summary is generated from forecast data and may change as forecasts update.</p>
+      <div class="section-title">
+        <h2>Weather Summary</h2>
+        <span>Forecast explained</span>
+      </div>
+
+      <label class="select-label" for="summaryDate">
+        Choose a day to read its forecast
+      </label>
+
+      <div class="summary-controls">
+        <select id="summaryDate" aria-label="Choose forecast date"></select>
+        <button id="summaryBtn">Generate summary</button>
+      </div>
+
+      <div class="story" id="weatherStory">
+        Select a day to generate a detailed weather summary.
+      </div>
+
+      <p class="story-note">
+        This summary is generated from forecast data and may change as forecasts update.
+      </p>
     </section>
+
     <section class="panel">
-      <div class="section-title"><h2>7-day forecast</h2><span>Choma</span></div>
+      <div class="section-title">
+        <h2>7-day forecast</h2>
+        <span>Choma</span>
+      </div>
+
       <div class="forecast" id="forecast"></div>
     </section>
+
     <footer>
-      <p>Weather forecasts powered by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.</p>
-      <p id="status">Weather data updates automatically every 10 minutes.</p>
-      <p class="footer-brand">Created by <strong>TIVANNAH INNOVATIONS</strong> · Choma, Zambia 🇿🇲</p>
+      <p>
+        Weather forecasts powered by
+        <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.
+      </p>
+
+      <p id="status">
+        Weather data updates automatically every 10 minutes.
+      </p>
+
+      <p class="footer-brand">
+        Created by <strong>TIVANNAH INNOVATIONS</strong> · Choma, Zambia 🇿🇲
+      </p>
     </footer>
+
   </main>
+
   <script src="app.js"></script>
+
+  <!-- INSTALL APP FUNCTION -->
+  <script>
+    let deferredInstallPrompt = null;
+
+    const installBtn = document.getElementById('installBtn');
+    const installHelp = document.getElementById('installHelp');
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+
+      deferredInstallPrompt = event;
+      installBtn.classList.add('visible');
+      installHelp.classList.remove('visible');
+    });
+
+    installBtn.addEventListener('click', async () => {
+
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+
+        const choice = await deferredInstallPrompt.userChoice;
+
+        deferredInstallPrompt = null;
+        installBtn.classList.remove('visible');
+
+        if (choice.outcome === 'accepted') {
+          installHelp.textContent = 'Choma Weather installation started successfully.';
+          installHelp.classList.add('visible');
+        }
+
+        return;
+      }
+
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+      if (isIOS) {
+        installHelp.innerHTML =
+          'To install Choma Weather: tap the <strong>Share</strong> button in Safari, then choose <strong>Add to Home Screen</strong>.';
+      } else {
+        installHelp.textContent =
+          'Open this website in Google Chrome. Tap the three-dot menu and select Install app or Add to Home screen.';
+      }
+
+      installHelp.classList.add('visible');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBtn.classList.remove('visible');
+      installHelp.textContent = 'Choma Weather has been installed!';
+      installHelp.classList.add('visible');
+    });
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      installBtn.classList.remove('visible');
+    }
+  </script>
+
 </body>
 </html>
