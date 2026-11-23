@@ -1,11 +1,19 @@
 {
-  "name":"Choma Weather",
-  "short_name":"Choma Weather",
-  "description":"Live weather for Choma, Zambia",
-  "start_url":"./",
-  "scope":"./",
-  "display":"standalone",
-  "background_color":"#061d45",
-  "theme_color":"#061d45",
-  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "name": "Choma Weather",
+  "short_name": "Choma Weather",
+  "description": "Your trusted local weather forecast for Choma, Zambia.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#061d45",
+  "theme_color": "#061d45",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
