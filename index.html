@@ -1,926 +1,1061 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Choma Weather | Weather Forecast for Choma, Zambia</title>
+<title>Choma Weather | Weather Forecast for Choma, Zambia</title>
 
-  <meta name="description" content="Choma Weather provides local weather forecasts, temperature updates, rain alerts and daily weather information for Choma, Zambia.">
+<meta name="description" content="Choma Weather provides local weather forecasts, temperature updates, rain alerts and daily weather information for Choma, Zambia.">
 
-  <meta name="application-name" content="Choma Weather">
-  <meta name="apple-mobile-web-app-title" content="Choma Weather">
-  <meta name="theme-color" content="#061d45">
+<meta name="application-name" content="Choma Weather">
+<meta name="apple-mobile-web-app-title" content="Choma Weather">
+<meta name="theme-color" content="#061d45">
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Choma Weather">
-  <meta property="og:site_name" content="Choma Weather">
-  <meta property="og:description" content="Your trusted local weather forecast for Choma, Zambia.">
-  <meta property="og:url" content="https://mubitakabika.github.io/choma-weather/">
-  <meta property="og:image" content="https://mubitakabika.github.io/choma-weather/icon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Choma Weather">
+<meta property="og:site_name" content="Choma Weather">
+<meta property="og:description" content="Your trusted local weather forecast for Choma, Zambia.">
+<meta property="og:url" content="https://mubitakabika.github.io/choma-weather/">
+<meta property="og:image" content="https://mubitakabika.github.io/choma-weather/icon.svg">
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Choma Weather">
-  <meta name="twitter:description" content="Your trusted local weather forecast for Choma, Zambia.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Choma Weather">
+<meta name="twitter:description" content="Your trusted local weather forecast for Choma, Zambia.">
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
 
-  <style>
+<style>
 
-    /* INSTALL BUTTON */
+/* INSTALL BUTTON */
 
-    .install-area {
-      text-align: center;
-      margin: 15px 0 22px;
-    }
+.install-button {
+width:100%;
+padding:14px;
+border:0;
+border-radius:12px;
+background:linear-gradient(135deg,#50d4f5,#168bd1);
+color:#061d45;
+font-weight:800;
+cursor:pointer;
+}
 
-    .install-button {
-      display: none;
-      width: 100%;
-      padding: 15px 20px;
-      border: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #50d4f5, #168bd1);
-      color: #061d45;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(0,0,0,.18);
-    }
+/* TOP BAR */
 
-    .install-button.visible {
-      display: block;
-    }
+.topbar {
+display:flex;
+align-items:center;
+gap:12px;
+}
 
-    .install-help {
-      display: none;
-      margin-top: 10px;
-      color: #dceaff;
-      font-size: 12px;
-      line-height: 1.6;
-    }
+.menu-button,
+.sound-button {
+width:43px;
+height:43px;
+border:1px solid rgba(255,255,255,.2);
+border-radius:12px;
+background:rgba(255,255,255,.1);
+color:white;
+font-size:21px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
+}
 
-    .install-help.visible {
-      display: block;
-    }
+.brand {
+flex:1;
+}
 
-    /* HAMBURGER MENU */
+/* SOUND CONTROL */
 
-    .topbar {
-      position: relative;
-    }
+.sound-button.active {
+background:rgba(80,212,245,.2);
+border-color:#50d4f5;
+}
 
-    .menu-button {
-      width: 43px;
-      height: 43px;
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 12px;
-      background: rgba(255,255,255,.1);
-      color: white;
-      font-size: 25px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+/* NAVIGATION DRAWER */
 
-    /* SIDE DRAWER */
+.menu-overlay {
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.65);
+z-index:9998;
+opacity:0;
+visibility:hidden;
+transition:.3s;
+}
 
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.65);
-      z-index: 9998;
-      opacity: 0;
-      visibility: hidden;
-      transition: .3s;
-    }
+.menu-overlay.active {
+opacity:1;
+visibility:visible;
+}
 
-    .menu-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+.side-menu {
+position:fixed;
+top:0;
+left:0;
+width:min(310px,85vw);
+height:100%;
+background:#061d45;
+z-index:9999;
+transform:translateX(-105%);
+transition:transform .35s ease;
+overflow-y:auto;
+padding:20px;
+box-shadow:8px 0 30px rgba(0,0,0,.3);
+color:white;
+}
 
-    .side-menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: min(310px, 85vw);
-      height: 100%;
-      background: #061d45;
-      z-index: 9999;
-      transform: translateX(-105%);
-      transition: transform .35s ease;
-      overflow-y: auto;
-      padding: 20px;
-      box-shadow: 8px 0 30px rgba(0,0,0,.3);
-      color: white;
-    }
+.side-menu.active {
+transform:translateX(0);
+}
 
-    .side-menu.active {
-      transform: translateX(0);
-    }
+.menu-heading {
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid rgba(255,255,255,.15);
+padding-bottom:18px;
+margin-bottom:15px;
+}
 
-    .menu-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,.15);
-      padding-bottom: 18px;
-      margin-bottom: 15px;
-    }
+.menu-heading h2 {
+font-size:17px;
+letter-spacing:1px;
+margin:0;
+}
 
-    .menu-heading h2 {
-      font-size: 17px;
-      letter-spacing: 1px;
-      margin: 0;
-    }
+.menu-heading button {
+border:none;
+background:none;
+color:white;
+font-size:30px;
+cursor:pointer;
+}
 
-    .menu-heading button {
-      border: none;
-      background: none;
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
-    }
+.menu-links {
+display:flex;
+flex-direction:column;
+gap:5px;
+}
 
-    .menu-links {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+.menu-links a {
+display:block;
+padding:12px 10px;
+color:#e7f2ff;
+text-decoration:none;
+border-radius:9px;
+font-size:14px;
+}
 
-    .menu-links a {
-      display: block;
-      padding: 12px 10px;
-      color: #e7f2ff;
-      text-decoration: none;
-      border-radius: 9px;
-      font-size: 14px;
-      transition: .2s;
-    }
+.menu-links a:hover,
+.menu-links a.selected {
+background:rgba(80,212,245,.15);
+color:#50d4f5;
+}
 
-    .menu-links a:hover {
-      background: rgba(80,212,245,.15);
-      color: #50d4f5;
-    }
+.menu-links h3 {
+color:#50d4f5;
+font-size:11px;
+letter-spacing:1.5px;
+margin:15px 5px 5px;
+}
 
-    .menu-links h3 {
-      color: #50d4f5;
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      margin: 15px 5px 5px;
-    }
+.menu-divider {
+height:1px;
+background:rgba(255,255,255,.13);
+margin:12px 0;
+}
 
-    .menu-divider {
-      height: 1px;
-      background: rgba(255,255,255,.13);
-      margin: 12px 0;
-    }
+.menu-action {
+width:100%;
+padding:13px;
+margin:5px 0;
+border:none;
+border-radius:10px;
+background:linear-gradient(135deg,#50d4f5,#168bd1);
+color:#061d45;
+font-weight:800;
+font-size:12px;
+cursor:pointer;
+}
 
-    .menu-action {
-      width: 100%;
-      padding: 13px;
-      margin: 5px 0;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg,#50d4f5,#168bd1);
-      color: #061d45;
-      font-weight: 800;
-      font-size: 12px;
-      cursor: pointer;
-    }
+.share-action {
+background:rgba(255,255,255,.12);
+color:white;
+border:1px solid rgba(255,255,255,.2);
+}
 
-    .share-action {
-      background: rgba(255,255,255,.12);
-      color: white;
-      border: 1px solid rgba(255,255,255,.2);
-    }
+/* VIEW MANAGEMENT */
 
-    .menu-footer {
-      margin-top: 25px;
-      padding: 15px 5px;
-      border-top: 1px solid rgba(255,255,255,.15);
-      font-size: 11px;
-      color: #bdd1eb;
-      text-align: center;
-    }
+/* Only the selected feature is displayed. */
 
-    .menu-footer strong {
-      display: block;
-      color: #50d4f5;
-      margin-top: 5px;
-      letter-spacing: 1px;
-    }
+.app-view {
+display:none;
+}
 
-    /* ABOUT APP */
+.app-view.active-view {
+display:block;
+animation:viewAppear .35s ease;
+}
 
-    .about-app {
-      margin-top: 20px;
-      padding: 22px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      color: #eaf4ff;
-      line-height: 1.7;
-    }
+@keyframes viewAppear {
+from {
+opacity:0;
+transform:translateY(8px);
+}
+to {
+opacity:1;
+transform:translateY(0);
+}
+}
 
-    .about-app h2 {
-      color: #50d4f5;
-      font-size: 19px;
-      margin-top: 0;
-    }
+/* ADVISORY */
 
-    .about-app h3 {
-      font-size: 14px;
-      color: #50d4f5;
-      margin-top: 20px;
-    }
+.advisory-panel {
+display:none;
+margin:15px 0;
+padding:20px;
+border-radius:18px;
+background:rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.15);
+color:white;
+}
 
-    .contact-link {
-      display: inline-block;
-      padding: 11px 17px;
-      margin-top: 8px;
-      border-radius: 10px;
-      background: #50d4f5;
-      color: #061d45;
-      font-weight: 800;
-      text-decoration: none;
-    }
+.advisory-panel.active {
+display:block;
+animation:viewAppear .35s ease;
+}
 
-    /* ADVISORY SECTION */
+.advisory-panel h2 {
+color:#50d4f5;
+margin-top:0;
+}
 
-    .advisory-panel {
-      display: none;
-      margin: 20px 0;
-      padding: 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.15);
-      color: white;
-    }
+.advisory-date {
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin:10px 0 15px;
+background:white;
+color:#061d45;
+font-size:14px;
+}
 
-    .advisory-panel.active {
-      display: block;
-      animation: advisoryFade .35s ease;
-    }
+.advisory-result {
+padding:15px;
+background:rgba(0,0,0,.16);
+border-radius:12px;
+line-height:1.7;
+font-size:14px;
+}
 
-    @keyframes advisoryFade {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+.advisory-result strong {
+color:#50d4f5;
+}
 
-    .advisory-panel h2 {
-      color: #50d4f5;
-      margin-top: 0;
-    }
+.advisory-close {
+border:none;
+background:rgba(255,255,255,.12);
+color:white;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+margin-top:15px;
+}
 
-    .advisory-date {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin: 10px 0 15px;
-      background: white;
-      color: #061d45;
-      font-size: 14px;
-    }
+/* ABOUT */
 
-    .advisory-result {
-      padding: 15px;
-      background: rgba(0,0,0,.16);
-      border-radius: 12px;
-      line-height: 1.7;
-      font-size: 14px;
-    }
+.about-app {
+margin-top:15px;
+padding:22px;
+border-radius:18px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+color:#eaf4ff;
+line-height:1.7;
+}
 
-    .advisory-result strong {
-      color: #50d4f5;
-    }
+.about-app h2,
+.about-app h3 {
+color:#50d4f5;
+}
 
-    .advisory-close {
-      border: none;
-      background: rgba(255,255,255,.12);
-      color: white;
-      padding: 9px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
+.contact-link {
+display:inline-block;
+padding:11px 17px;
+margin-top:8px;
+border-radius:10px;
+background:#50d4f5;
+color:#061d45;
+font-weight:800;
+text-decoration:none;
+}
 
-    html {
-      scroll-behavior: smooth;
-    }
+/* VIEW HEADER */
 
-  </style>
+.view-heading {
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:18px;
+}
 
+.back-button {
+border:1px solid rgba(255,255,255,.2);
+background:rgba(255,255,255,.1);
+color:white;
+padding:9px 13px;
+border-radius:9px;
+cursor:pointer;
+}
+
+.view-heading h2 {
+margin:0;
+color:#50d4f5;
+font-size:19px;
+}
+
+/* FOOTER */
+
+footer {
+margin-top:20px;
+text-align:center;
+font-size:12px;
+color:#bdd1eb;
+line-height:1.7;
+}
+
+footer a {
+color:#50d4f5;
+}
+
+/* GENERAL */
+
+html {
+scroll-behavior:smooth;
+}
+
+</style>
 </head>
 
 <body>
 
-  <div class="weather-clouds">
-    <div class="cloud cloud-one"></div>
-    <div class="cloud cloud-two"></div>
-    <div class="cloud cloud-three"></div>
-  </div>
+<!-- WEATHER ANIMATION LAYERS -->
 
-  <div class="sun-glow"></div>
+<div class="weather-clouds">
+<div class="cloud cloud-one"></div>
+<div class="cloud cloud-two"></div>
+<div class="cloud cloud-three"></div>
+</div>
 
-  <div class="rain-layer">
-    <div class="raindrops"></div>
-    <div class="raindrops raindrops-two"></div>
-  </div>
+<div class="sun-glow"></div>
 
-  <main class="app" id="homeSection">
+<div class="rain-layer">
+<div class="raindrops"></div>
+<div class="raindrops raindrops-two"></div>
+</div>
 
-    <!-- TOP BAR -->
+<!-- MAIN APPLICATION -->
 
-    <header class="topbar">
+<main class="app" id="homeSection">
 
-      <button id="menuBtn" class="menu-button" aria-label="Open navigation menu">
-        ☰
-      </button>
+<!-- TOP BAR -->
 
-      <div class="brand">
-        <span class="brand-icon">🌦️</span>
-        <div>
-          <strong>CHOMA WEATHER</strong>
-          <small>Know Your Weather</small>
-        </div>
-      </div>
+<header class="topbar">
 
-      <button id="refreshBtn" class="refresh" aria-label="Refresh weather">
-        ↻
-      </button>
+<button id="menuBtn" class="menu-button" aria-label="Open menu">
+☰
+</button>
 
-    </header>
+<div class="brand">
+<span class="brand-icon">🌦️</span>
+<div>
+<strong>CHOMA WEATHER</strong>
+<small>Know Your Weather</small>
+</div>
+</div>
 
-    <!-- SIDE MENU -->
+<button id="soundToggle" class="sound-button" aria-label="Turn sounds on" aria-pressed="false">
+🔇
+</button>
 
-    <div id="menuOverlay" class="menu-overlay"></div>
+<button id="refreshBtn" class="refresh" aria-label="Refresh weather">
+↻
+</button>
 
-    <aside id="sideMenu" class="side-menu">
+</header>
 
-      <div class="menu-heading">
-        <h2>🌦️ CHOMA WEATHER</h2>
-        <button id="closeMenuBtn" aria-label="Close menu">×</button>
-      </div>
+<!-- SIDE MENU -->
 
-      <nav class="menu-links">
+<div id="menuOverlay" class="menu-overlay"></div>
 
-        <a href="#homeSection" data-menu-close>🏠 Home</a>
-        <a href="#currentWeatherSection" data-menu-close>🌤️ Current Weather</a>
-        <a href="#rainAlertPanel" data-menu-close>🌧️ Rain Alerts</a>
-        <a href="#hourlySection" data-menu-close>🕒 Hourly Forecast</a>
-        <a href="#summarySection" data-menu-close>📅 Choose a Forecast Day</a>
-        <a href="#summarySection" data-menu-close>📖 Weather Summary</a>
+<aside id="sideMenu" class="side-menu">
 
-        <div class="menu-divider"></div>
+<div class="menu-heading">
+<h2>🌦️ CHOMA WEATHER</h2>
+<button id="closeMenuBtn" aria-label="Close menu">×</button>
+</div>
 
-        <h3>WEATHER ADVISORIES</h3>
+<nav class="menu-links">
 
-        <a href="#" data-advisory="clothing">👕 What to Wear</a>
-        <a href="#" data-advisory="umbrella">☂️ Umbrella Advisory</a>
-        <a href="#" data-advisory="driving">🚗 Driving Conditions</a>
-        <a href="#" data-advisory="outdoor">🏞️ Outdoor Activities</a>
-        <a href="#" data-advisory="heat">🌡️ Heat Advisory</a>
+<a href="#" data-view="dashboardView">🏠 Home</a>
+<a href="#" data-view="currentView">🌤️ Current Weather</a>
+<a href="#" data-view="rainView">🌧️ Rain Alerts</a>
+<a href="#" data-view="hourlyView">🕒 Hourly Forecast</a>
+<a href="#" data-view="summaryView">📖 Weather Summary</a>
+<a href="#" data-view="forecastView">📆 7-Day Forecast</a>
 
-        <div class="menu-divider"></div>
+<div class="menu-divider"></div>
 
-        <a href="#forecastSection" data-menu-close>📆 7-Day Forecast</a>
+<h3>WEATHER ADVISORIES</h3>
 
-        <div class="menu-divider"></div>
+<a href="#" data-advisory="clothing">👕 What to Wear</a>
+<a href="#" data-advisory="umbrella">☂️ Umbrella Advisory</a>
+<a href="#" data-advisory="driving">🚗 Driving Conditions</a>
+<a href="#" data-advisory="outdoor">🏞️ Outdoor Activities</a>
+<a href="#" data-advisory="heat">🌡️ Heat Advisory</a>
 
-        <button id="downloadAppBtn" class="menu-action">
-          ⬇ DOWNLOAD CHOMA WEATHER
-        </button>
+<div class="menu-divider"></div>
 
-        <button id="shareAppBtn" class="menu-action share-action">
-          📤 SHARE CHOMA WEATHER
-        </button>
+<button id="installBtn" class="menu-action">
+⬇ DOWNLOAD CHOMA WEATHER
+</button>
 
-        <a href="#aboutApp" data-menu-close>ℹ️ About App</a>
+<button id="shareAppBtn" class="menu-action share-action">
+📤 SHARE CHOMA WEATHER
+</button>
 
-      </nav>
+<a href="#" data-view="aboutView">ℹ️ About App</a>
 
-      <div class="menu-footer">
-        Created by
-        <strong>TIVANNAH INNOVATIONS</strong>
-      </div>
+<div id="installHelp" style="display:none;margin-top:10px;font-size:12px;line-height:1.6;color:#bdd1eb;"></div>
 
-    </aside>
+</nav>
 
-    <!-- APP INSTALLATION -->
+</aside>
 
-    <div class="install-area">
+<!-- DASHBOARD VIEW -->
 
-      <button id="installBtn" class="install-button visible">
-        ⬇ DOWNLOAD CHOMA WEATHER
-      </button>
+<div id="dashboardView" class="app-view active-view">
 
-      <div id="installHelp" class="install-help"></div>
+<section class="hero" id="currentWeatherSection">
 
-    </div>
+<div class="location">
+<span class="pin">📍</span>
+Choma, Zambia
+<span class="live-dot"></span>
+<span class="live-label">LIVE</span>
+</div>
 
-    <!-- ADVISORY RESULTS -->
+<div class="updated" id="updated">
+Getting the latest weather…
+</div>
 
-    <section class="advisory-panel" id="advisoryPanel">
+<div class="current">
 
-      <h2 id="advisoryTitle">Weather Advisory</h2>
+<div class="weather-icon" id="weatherIcon">⛅</div>
 
-      <p>
-        Select a forecast date to receive a weather recommendation
-        based on the available forecast information.
-      </p>
+<div>
+<div class="temp" id="temperature">--°</div>
+<div class="condition" id="condition">Loading…</div>
+</div>
 
-      <label for="advisoryDate">Choose forecast date</label>
+</div>
 
-      <select id="advisoryDate" class="advisory-date">
-        <option value="">Loading forecast dates...</option>
-      </select>
+<div class="feels">
+Feels like <span id="feels">--°C</span>
+</div>
 
-      <div id="advisoryResult" class="advisory-result">
-        Select a date to view your weather advisory.
-      </div>
+<div class="stats">
 
-      <button id="closeAdvisory" class="advisory-close">
-        Close advisory
-      </button>
+<div class="stat">
+<span>💧</span>
+<small>Humidity</small>
+<strong id="humidity">--%</strong>
+</div>
 
-    </section>
+<div class="stat">
+<span>🌬️</span>
+<small>Wind</small>
+<strong id="wind">-- km/h</strong>
+</div>
 
-    <!-- CURRENT WEATHER -->
+<div class="stat">
+<span>🌡️</span>
+<small>Pressure</small>
+<strong id="pressure">-- hPa</strong>
+</div>
 
-    <section class="hero" id="currentWeatherSection">
+<div class="stat">
+<span>☀️</span>
+<small>UV Index</small>
+<strong id="uv">--</strong>
+</div>
 
-      <div class="location">
-        <span class="pin">📍</span>
-        Choma, Zambia
-        <span class="live-dot"></span>
-        <span class="live-label">LIVE</span>
-      </div>
+</div>
+</section>
 
-      <div class="updated" id="updated">
-        Getting the latest weather…
-      </div>
+<section class="panel" id="todayOutlookSection">
 
-      <div class="current">
+<div class="section-title">
+<h2>Today's outlook</h2>
+<span id="todayDate"></span>
+</div>
 
-        <div class="weather-icon" id="weatherIcon">⛅</div>
+<div class="today-summary">
 
-        <div>
-          <div class="temp" id="temperature">--°</div>
-          <div class="condition" id="condition">Loading…</div>
-        </div>
+<div>
+<span>Sunrise</span>
+<strong id="sunrise">--:--</strong>
+</div>
 
-      </div>
+<div>
+<span>Sunset</span>
+<strong id="sunset">--:--</strong>
+</div>
 
-      <div class="feels">
-        Feels like <span id="feels">--°C</span>
-      </div>
+<div>
+<span>Rain chance</span>
+<strong id="rainToday">--%</strong>
+</div>
 
-      <div class="stats">
+<div>
+<span>Rain total</span>
+<strong id="rainAmount">-- mm</strong>
+</div>
 
-        <div class="stat">
-          <span>💧</span>
-          <small>Humidity</small>
-          <strong id="humidity">--%</strong>
-        </div>
+</div>
 
-        <div class="stat">
-          <span>🌬️</span>
-          <small>Wind</small>
-          <strong id="wind">-- km/h</strong>
-        </div>
+</section>
 
-        <div class="stat">
-          <span>🌡️</span>
-          <small>Pressure</small>
-          <strong id="pressure">-- hPa</strong>
-        </div>
+<section class="panel rain-alert-panel" id="rainAlertPanel">
 
-        <div class="stat">
-          <span>☀️</span>
-          <small>UV Index</small>
-          <strong id="uv">--</strong>
-        </div>
+<div class="section-title">
+<h2>🌧️ Rain Alert</h2>
+<span>Next 6 hours</span>
+</div>
 
-      </div>
+<div class="rain-alert-content" id="rainAlert">
 
-    </section>
+<div class="rain-alert-icon">🌤️</div>
 
-    <!-- TODAY'S OUTLOOK -->
+<div class="rain-alert-text">
+<strong>Checking rain forecast...</strong>
+<p>Please wait while we analyse the upcoming weather.</p>
+</div>
 
-    <section class="panel" id="todayOutlookSection">
+</div>
 
-      <div class="section-title">
-        <h2>Today's outlook</h2>
-        <span id="todayDate"></span>
-      </div>
+</section>
 
-      <div class="today-summary">
+</div>
 
-        <div>
-          <span>Sunrise</span>
-          <strong id="sunrise">--:--</strong>
-        </div>
+<!-- CURRENT WEATHER VIEW -->
 
-        <div>
-          <span>Sunset</span>
-          <strong id="sunset">--:--</strong>
-        </div>
+<div id="currentView" class="app-view">
 
-        <div>
-          <span>Rain chance</span>
-          <strong id="rainToday">--%</strong>
-        </div>
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>🌤️ Current Weather</h2>
+</div>
 
-        <div>
-          <span>Rain total</span>
-          <strong id="rainAmount">-- mm</strong>
-        </div>
+<section class="hero">
 
-      </div>
+<div class="location">
+📍 Choma, Zambia
+<span class="live-dot"></span>
+LIVE
+</div>
 
-    </section>
+<div class="updated" id="currentUpdated">
+Latest weather conditions
+</div>
 
-    <!-- RAIN ALERT -->
+<div class="current">
+<div class="weather-icon" id="currentWeatherIcon">⛅</div>
+<div>
+<div class="temp" id="currentTemperature">--°</div>
+<div class="condition" id="currentCondition">Loading…</div>
+</div>
+</div>
 
-    <section class="panel rain-alert-panel" id="rainAlertPanel">
+<p>Current conditions are also available on your home dashboard.</p>
 
-      <div class="section-title">
-        <h2>🌧️ Rain Alert</h2>
-        <span>Next 6 hours</span>
-      </div>
+</section>
 
-      <div class="rain-alert-content" id="rainAlert">
+</div>
 
-        <div class="rain-alert-icon">🌤️</div>
+<!-- RAIN ALERT VIEW -->
 
-        <div class="rain-alert-text">
-          <strong>Checking rain forecast...</strong>
-          <p>Please wait while we analyse the upcoming weather.</p>
-        </div>
+<div id="rainView" class="app-view">
 
-      </div>
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>🌧️ Rain Alerts</h2>
+</div>
 
-    </section>
+<section class="panel">
 
-    <!-- HOURLY FORECAST -->
+<div class="section-title">
+<h2>Rain Alert</h2>
+<span>Next 6 hours</span>
+</div>
 
-    <section class="panel" id="hourlySection">
+<div id="rainAlertExtra">
+Check the home dashboard for the latest rain alert.
+</div>
 
-      <div class="section-title">
-        <h2>Next 24 hours</h2>
-        <span>Hourly forecast</span>
-      </div>
+</section>
 
-      <div class="hourly" id="hourly"></div>
+</div>
 
-    </section>
+<!-- HOURLY FORECAST VIEW -->
 
-    <!-- WEATHER SUMMARY -->
+<div id="hourlyView" class="app-view">
 
-    <section class="panel story-panel" id="summarySection">
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>🕒 Hourly Forecast</h2>
+</div>
 
-      <div class="section-title">
-        <h2>Weather Summary</h2>
-        <span>Forecast explained</span>
-      </div>
+<section class="panel" id="hourlySection">
 
-      <label class="select-label" for="summaryDate">
-        Choose a day to read its forecast
-      </label>
+<div class="section-title">
+<h2>Next 24 hours</h2>
+<span>Hourly forecast</span>
+</div>
 
-      <div class="summary-controls">
+<div class="hourly" id="hourly"></div>
 
-        <select id="summaryDate" aria-label="Choose forecast date"></select>
+</section>
 
-        <button id="summaryBtn">
-          Generate summary
-        </button>
+</div>
 
-      </div>
+<!-- WEATHER SUMMARY VIEW -->
 
-      <div class="story" id="weatherStory">
-        Select a day to generate a detailed weather summary.
-      </div>
+<div id="summaryView" class="app-view">
 
-      <p class="story-note">
-        This summary is generated from forecast data and may change
-        as forecasts update.
-      </p>
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>📖 Weather Summary</h2>
+</div>
 
-    </section>
+<section class="panel story-panel" id="summarySection">
 
-    <!-- SEVEN DAY FORECAST -->
+<div class="section-title">
+<h2>Weather Summary</h2>
+<span>Forecast explained</span>
+</div>
 
-    <section class="panel" id="forecastSection">
+<label class="select-label" for="summaryDate">
+Choose a day to read its forecast
+</label>
 
-      <div class="section-title">
-        <h2>7-day forecast</h2>
-        <span>Choma</span>
-      </div>
+<div class="summary-controls">
 
-      <div class="forecast" id="forecast"></div>
+<select id="summaryDate" aria-label="Choose forecast date"></select>
 
-    </section>
+<button id="summaryBtn">
+Generate summary
+</button>
 
-    <!-- ABOUT APP -->
+</div>
 
-    <section class="about-app" id="aboutApp">
+<div class="story" id="weatherStory">
+Select a day to generate a detailed weather summary.
+</div>
 
-      <h2>About Choma Weather</h2>
+<p class="story-note">
+This summary is generated from forecast data and may change as forecasts update.
+</p>
 
-      <p>
-        Choma Weather is a local weather application designed to keep
-        residents and visitors of Choma informed about current weather
-        conditions and upcoming forecasts.
-      </p>
+</section>
 
-      <p>
-        The application provides current weather information, hourly
-        forecasts, seven-day forecasts, rain alerts and helpful daily
-        weather advisories to support everyday planning.
-      </p>
+</div>
 
-      <h3>Developed by TIVANNAH INNOVATIONS</h3>
+<!-- SEVEN DAY FORECAST VIEW -->
 
-      <p>
-        For enquiries, suggestions, technical support or anything
-        concerning this application, please contact Tivannah Innovations.
-      </p>
+<div id="forecastView" class="app-view">
 
-      <a href="tel:0971453747" class="contact-link">
-        📞 0971 453 747
-      </a>
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>📆 7-Day Forecast</h2>
+</div>
 
-    </section>
+<section class="panel" id="forecastSection">
 
-    <!-- FOOTER -->
+<div class="section-title">
+<h2>7-day forecast</h2>
+<span>Choma</span>
+</div>
 
-    <footer>
+<div class="forecast" id="forecast"></div>
 
-      <p>
-        Weather forecasts powered by
-        <a href="https://open-meteo.com/" target="_blank" rel="noopener">
-          Open-Meteo
-        </a>.
-      </p>
+</section>
 
-      <p id="status">
-        Weather data updates automatically every 10 minutes.
-      </p>
+</div>
 
-      <p class="footer-brand">
-        Created by <strong>TIVANNAH INNOVATIONS</strong> · Choma, Zambia 🇿🇲
-      </p>
+<!-- WEATHER ADVISORY VIEW -->
 
-    </footer>
+<div id="advisoryView" class="app-view">
 
-  </main>
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>Weather Advisory</h2>
+</div>
 
-  <script src="app.js"></script>
+<section class="advisory-panel active" id="advisoryPanel">
 
-  <!-- MENU, DOWNLOAD AND SHARE FUNCTIONS -->
+<h2 id="advisoryTitle">Weather Advisory</h2>
 
-  <script>
+<p>
+Select a forecast date to receive a weather recommendation based on the available forecast information.
+</p>
 
-    // SIDE MENU
+<label for="advisoryDate">Choose forecast date</label>
 
-    const menuBtn = document.getElementById("menuBtn");
-    const closeMenuBtn = document.getElementById("closeMenuBtn");
-    const sideMenu = document.getElementById("sideMenu");
-    const menuOverlay = document.getElementById("menuOverlay");
+<select id="advisoryDate" class="advisory-date">
+<option value="">Loading forecast dates...</option>
+</select>
 
-    function openMenu() {
-      sideMenu.classList.add("active");
-      menuOverlay.classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
+<div id="advisoryResult" class="advisory-result">
+Select a date to view your weather advisory.
+</div>
 
-    function closeMenu() {
-      sideMenu.classList.remove("active");
-      menuOverlay.classList.remove("active");
-      document.body.style.overflow = "";
-    }
+<button id="closeAdvisory" class="advisory-close">
+Close advisory
+</button>
 
-    menuBtn.addEventListener("click", openMenu);
-    closeMenuBtn.addEventListener("click", closeMenu);
-    menuOverlay.addEventListener("click", closeMenu);
+</section>
 
-    document.querySelectorAll("[data-menu-close]").forEach(link => {
-      link.addEventListener("click", closeMenu);
-    });
+</div>
 
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    });
+<!-- ABOUT VIEW -->
 
+<div id="aboutView" class="app-view">
 
-    // APP INSTALLATION
+<div class="view-heading">
+<button class="back-button" data-view="dashboardView">← Home</button>
+<h2>ℹ️ About App</h2>
+</div>
 
-    let deferredInstallPrompt = null;
+<section class="about-app" id="aboutApp">
 
-    const installBtn = document.getElementById("installBtn");
-    const downloadAppBtn = document.getElementById("downloadAppBtn");
-    const installHelp = document.getElementById("installHelp");
+<h2>About Choma Weather</h2>
 
-    window.addEventListener("beforeinstallprompt", event => {
+<p>
+Choma Weather is a local weather application designed to keep residents and visitors of Choma informed about current weather conditions and upcoming forecasts.
+</p>
 
-      event.preventDefault();
+<p>
+The application provides current weather information, hourly forecasts, seven-day forecasts, rain alerts and helpful daily weather advisories to support everyday planning.
+</p>
 
-      deferredInstallPrompt = event;
+<h3>Developed by TIVANNAH INNOVATIONS</h3>
 
-      installBtn.classList.add("visible");
+<p>
+For enquiries, suggestions, technical support or anything concerning this application, please contact Tivannah Innovations.
+</p>
 
-    });
+<a href="tel:0971453747" class="contact-link">
+📞 0971 453 747
+</a>
 
-    async function installApplication() {
+</section>
 
-      if (deferredInstallPrompt) {
+<footer>
 
-        deferredInstallPrompt.prompt();
+<p>
+Weather forecasts powered by
+<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.
+</p>
 
-        const choice = await deferredInstallPrompt.userChoice;
+<p id="status">
+Weather data updates automatically every 10 minutes.
+</p>
 
-        deferredInstallPrompt = null;
+<p>© Choma Weather · Choma, Zambia 🇿🇲</p>
 
-        if (choice.outcome === "accepted") {
+</footer>
 
-          installHelp.textContent = "Choma Weather installation started successfully.";
+</div>
 
-          installHelp.classList.add("visible");
+</main>
 
-        }
+<script src="app.js"></script>
 
-        return;
-      }
+<script>
 
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+/* SIDE MENU */
 
-      if (isIOS) {
+const menuBtn = document.getElementById("menuBtn");
+const closeMenuBtn = document.getElementById("closeMenuBtn");
+const sideMenu = document.getElementById("sideMenu");
+const menuOverlay = document.getElementById("menuOverlay");
 
-        installHelp.innerHTML =
-          'To install Choma Weather, use Safari’s Share button and select <strong>Add to Home Screen</strong>.';
+function openMenu() {
+sideMenu.classList.add("active");
+menuOverlay.classList.add("active");
+document.body.style.overflow = "hidden";
+}
 
-      } else {
+function closeMenu() {
+sideMenu.classList.remove("active");
+menuOverlay.classList.remove("active");
+document.body.style.overflow = "";
+}
 
-        installHelp.textContent =
-          "Installation is not currently available in this browser. Try opening Choma Weather in Google Chrome.";
+menuBtn.addEventListener("click",openMenu);
+closeMenuBtn.addEventListener("click",closeMenu);
+menuOverlay.addEventListener("click",closeMenu);
 
-      }
+document.addEventListener("keydown",event=>{
+if(event.key==="Escape") closeMenu();
+});
 
-      installHelp.classList.add("visible");
 
-    }
+/* VIEW NAVIGATION */
 
-    installBtn.addEventListener("click", installApplication);
-    downloadAppBtn.addEventListener("click", () => {
-      closeMenu();
-      installApplication();
-    });
+const allViews = document.querySelectorAll(".app-view");
 
-    window.addEventListener("appinstalled", () => {
+function showView(viewId) {
 
-      installBtn.classList.remove("visible");
+allViews.forEach(view=>{
+view.classList.remove("active-view");
+});
 
-      installHelp.textContent = "Choma Weather has been installed!";
+const selected = document.getElementById(viewId);
 
-      installHelp.classList.add("visible");
+if(selected) {
+selected.classList.add("active-view");
+}
 
-    });
+document.querySelectorAll("[data-view]").forEach(link=>{
+link.classList.toggle("selected",link.dataset.view===viewId);
+});
 
-    if (window.matchMedia("(display-mode: standalone)").matches) {
+closeMenu();
 
-      installBtn.classList.remove("visible");
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
-    }
+}
 
+document.querySelectorAll("[data-view]").forEach(link=>{
 
-    // SHARE APPLICATION
+link.addEventListener("click",event=>{
 
-    const shareAppBtn = document.getElementById("shareAppBtn");
+event.preventDefault();
 
-    shareAppBtn.addEventListener("click", async () => {
+showView(link.dataset.view);
 
-      const shareData = {
-        title: "Choma Weather",
-        text: "Stay informed about the weather in Choma, Zambia. Download and use Choma Weather!",
-        url: window.location.href
-      };
+});
 
-      closeMenu();
+});
 
-      try {
 
-        if (navigator.share) {
+/* INSTALL APPLICATION */
 
-          await navigator.share(shareData);
+let deferredInstallPrompt = null;
 
-        } else if (navigator.clipboard) {
+const installBtn = document.getElementById("installBtn");
+const installHelp = document.getElementById("installHelp");
 
-          await navigator.clipboard.writeText(shareData.url);
+window.addEventListener("beforeinstallprompt",event=>{
 
-          alert("Choma Weather link copied! You can now share it with friends.");
+event.preventDefault();
 
-        } else {
+deferredInstallPrompt = event;
 
-          prompt("Copy this link to share Choma Weather:", shareData.url);
+installBtn.style.display="block";
 
-        }
+});
 
-      } catch (error) {
+async function installApplication() {
 
-        if (error.name !== "AbortError") {
-          alert("Unable to share the app at the moment.");
-        }
+if(deferredInstallPrompt) {
 
-      }
+deferredInstallPrompt.prompt();
 
-    });
+const choice = await deferredInstallPrompt.userChoice;
 
+deferredInstallPrompt=null;
 
-    // WEATHER ADVISORY NAVIGATION
+if(choice.outcome==="accepted") {
+installHelp.textContent="Choma Weather installation started successfully.";
+installHelp.style.display="block";
+}
 
-    const advisoryPanel = document.getElementById("advisoryPanel");
-    const advisoryTitle = document.getElementById("advisoryTitle");
+return;
 
-    document.querySelectorAll("[data-advisory]").forEach(link => {
+}
 
-      link.addEventListener("click", event => {
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
 
-        event.preventDefault();
+if(isIOS) {
 
-        const type = link.dataset.advisory;
+installHelp.innerHTML='To install Choma Weather, use Safari’s Share button and select <strong>Add to Home Screen</strong>.';
 
-        const titles = {
-          clothing: "👕 What to Wear",
-          umbrella: "☂️ Umbrella Advisory",
-          driving: "🚗 Driving Conditions",
-          outdoor: "🏞️ Outdoor Activities",
-          heat: "🌡️ Heat Advisory"
-        };
+} else {
 
-        advisoryTitle.textContent = titles[type];
+installHelp.textContent="Installation is not currently available in this browser. Try opening Choma Weather in Google Chrome.";
 
-        advisoryPanel.dataset.type = type;
+}
 
-        advisoryPanel.classList.add("active");
+installHelp.style.display="block";
 
-        closeMenu();
+}
 
-        advisoryPanel.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+installBtn.addEventListener("click",installApplication);
 
-        if (typeof window.generateWeatherAdvisory === "function") {
-          window.generateWeatherAdvisory(type);
-        } else {
-          document.getElementById("advisoryResult").textContent =
-            "Weather advisory calculations will appear here once the forecast recommendation system is connected.";
-        }
+window.addEventListener("appinstalled",()=>{
 
-      });
+installBtn.style.display="none";
 
-    });
+installHelp.textContent="Choma Weather has been installed!";
 
+installHelp.style.display="block";
 
-    // CLOSE ADVISORY
+});
 
-    document.getElementById("closeAdvisory").addEventListener("click", () => {
+if(window.matchMedia("(display-mode: standalone)").matches) {
+installBtn.style.display="none";
+}
 
-      advisoryPanel.classList.remove("active");
 
-    });
+/* SHARE APPLICATION */
 
+document.getElementById("shareAppBtn").addEventListener("click",async()=>{
 
-    // UPDATE ADVISORY WHEN DATE CHANGES
+const shareData={
+title:"Choma Weather",
+text:"Stay informed about the weather in Choma, Zambia. Use Choma Weather!",
+url:window.location.href
+};
 
-    document.getElementById("advisoryDate").addEventListener("change", () => {
+closeMenu();
 
-      const type = advisoryPanel.dataset.type;
+try {
 
-      if (type && typeof window.generateWeatherAdvisory === "function") {
-        window.generateWeatherAdvisory(type);
-      }
+if(navigator.share) {
 
-    });
+await navigator.share(shareData);
 
-  </script>
+} else if(navigator.clipboard) {
+
+await navigator.clipboard.writeText(shareData.url);
+
+alert("Choma Weather link copied!");
+
+} else {
+
+prompt("Copy this link to share Choma Weather:",shareData.url);
+
+}
+
+} catch(error) {
+
+if(error.name!=="AbortError") {
+alert("Unable to share the app at the moment.");
+}
+
+}
+
+});
+
+
+/* WEATHER ADVISORIES */
+
+const advisoryPanel=document.getElementById("advisoryPanel");
+const advisoryTitle=document.getElementById("advisoryTitle");
+
+const advisoryTitles={
+clothing:"👕 What to Wear",
+umbrella:"☂️ Umbrella Advisory",
+driving:"🚗 Driving Conditions",
+outdoor:"🏞️ Outdoor Activities",
+heat:"🌡️ Heat Advisory"
+};
+
+document.querySelectorAll("[data-advisory]").forEach(link=>{
+
+link.addEventListener("click",event=>{
+
+event.preventDefault();
+
+const type=link.dataset.advisory;
+
+advisoryTitle.textContent=advisoryTitles[type];
+
+advisoryPanel.dataset.type=type;
+
+showView("advisoryView");
+
+if(typeof window.generateWeatherAdvisory==="function") {
+
+window.generateWeatherAdvisory(type);
+
+} else {
+
+document.getElementById("advisoryResult").textContent=
+"Weather advisory calculations are loading.";
+
+}
+
+});
+
+});
+
+
+/* CLOSE ADVISORY */
+
+document.getElementById("closeAdvisory").addEventListener("click",()=>{
+
+showView("dashboardView");
+
+});
+
+
+/* UPDATE ADVISORY WHEN DATE CHANGES */
+
+document.getElementById("advisoryDate").addEventListener("change",()=>{
+
+const type=advisoryPanel.dataset.type;
+
+if(type && typeof window.generateWeatherAdvisory==="function") {
+window.generateWeatherAdvisory(type);
+}
+
+});
+
+
+/* SOUND BUTTON - CONTROL WILL BE CONNECTED IN APP.JS */
+
+const soundToggle=document.getElementById("soundToggle");
+
+soundToggle.addEventListener("click",()=>{
+
+if(typeof window.toggleWeatherSound==="function") {
+
+window.toggleWeatherSound();
+
+} else {
+
+soundToggle.textContent="🔇";
+
+}
+
+});
+
+</script>
 
 </body>
 </html>
