@@ -1,74 +1,64 @@
-*{box-sizing:border-box} :root{--navy:#061d45;--blue:#0a3671;--cyan:#50d4f5;--glass:rgba(255,255,255,.09);--text:#f4f9ff;--muted:#bdd1eb}
-body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 0%,#165da1 0,#082b60 36%,#041630 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
-.app{max-width:850px;margin:auto;padding:18px 14px 35px}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:8px 4px 18px}.brand{display:flex;align-items:center;gap:12px}.brand-icon{font-size:34px}.brand strong{letter-spacing:1.5px;font-size:17px;display:block}.brand small{color:#9bc8f5;letter-spacing:1px}.refresh{border:1px solid #74b9ed;background:rgba(255,255,255,.12);color:white;border-radius:14px;font-size:24px;width:45px;height:45px;cursor:pointer}
-.hero,.panel{background:linear-gradient(145deg,rgba(33,120,197,.34),rgba(4,24,59,.58));border:1px solid rgba(142,209,255,.18);border-radius:24px;box-shadow:0 18px 40px rgba(0,0,0,.18);backdrop-filter:blur(12px)}
-.hero{padding:22px 20px 18px}.location{font-size:17px;font-weight:650}.live-dot{display:inline-block;width:8px;height:8px;background:#50eea0;border-radius:50%;margin-left:7px;box-shadow:0 0 9px #50eea0}.live-label{font-size:10px;color:#70f5b6;letter-spacing:1px}.updated{font-size:12px;color:#a8c6e6;margin-top:5px}
-.current{display:flex;align-items:center;gap:15px;margin:14px 0 0}.weather-icon{font-size:70px;filter:drop-shadow(0 5px 12px #00162f)}.temp{font-size:64px;line-height:1;font-weight:750;letter-spacing:-3px}.condition{font-size:18px;color:#d8eaff;margin-top:5px}.feels{font-size:13px;color:var(--muted);margin:5px 0 18px 4px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{background:rgba(1,16,43,.35);border-radius:15px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;gap:4px}.stat span{font-size:18px}.stat small{color:#b7cce5;font-size:11px}.stat strong{font-size:15px}
-.panel{padding:17px;margin-top:14px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.section-title h2{font-size:17px;margin:0}.section-title>span{font-size:12px;color:#a9c8e7}
-.today-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.today-summary div{background:var(--glass);border-radius:12px;padding:12px 8px}.today-summary span{display:block;font-size:11px;color:#bbd2e9;margin-bottom:5px}.today-summary strong{font-size:14px}
-.hourly{display:flex;gap:9px;overflow-x:auto;padding-bottom:5px}.hour{min-width:70px;text-align:center;background:var(--glass);padding:10px 8px;border-radius:13px}.hour time{font-size:11px;color:#c0d7ee}.hour .ico{font-size:24px;margin:7px 0}.hour strong{font-size:15px;display:block}.hour small{font-size:10px;color:#8edbff;display:block;margin-top:5px}
-.forecast{display:flex;flex-direction:column;gap:7px}.day{display:grid;grid-template-columns:1.1fr 45px .7fr 1fr .6fr;align-items:center;gap:8px;background:var(--glass);padding:9px 11px;border-radius:12px}.dayname{font-size:13px}.day .ico{font-size:22px;text-align:center}.range{font-size:13px}.low{color:#a9c9e9}.rain{font-size:11px;color:#9be3ff;text-align:right}
-footer{text-align:center;color:#a9c5e3;font-size:11px;padding:20px 5px}footer a{color:#83d8ff}.footer-brand{color:#d7e9fb;font-weight:600}
-@media(max-width:430px){.app{padding:12px}.hero{padding:18px 14px}.temp{font-size:58px}.stats{gap:6px}.stat{padding:10px 4px}.today-summary{grid-template-columns:repeat(2,1fr)}.day{grid-template-columns:1fr 35px .65fr 1fr .55fr;gap:4px;padding:8px}.rain{font-size:10px}.section-title h2{font-size:16px}}
-
-.select-label{display:block;color:#bad2e9;font-size:12px;margin:0 0 8px}.summary-controls{display:flex;gap:8px}.summary-controls select{min-width:0;flex:1;color:#f4f9ff;background:#092c5b;border:1px solid #4a83b8;border-radius:12px;padding:12px;font:inherit}.summary-controls button{background:#36b9e9;color:#06234b;border:0;border-radius:12px;padding:0 14px;font-weight:700;cursor:pointer}.story{margin-top:14px;background:rgba(1,16,43,.35);border-left:3px solid #50d4f5;border-radius:12px;padding:14px;line-height:1.65;font-size:14px;min-height:74px}.story-note{font-size:10px;color:#9ebbd8;margin:9px 2px 0}.footer-brand strong{letter-spacing:1.4px;color:#fff}@media(max-width:380px){.summary-controls{flex-direction:column}.summary-controls button{padding:12px}}
 /* =========================================
+   CHOMA WEATHER
    TIVANNAH INNOVATIONS
-   CHOMA WEATHER - ANIMATED WEATHER EFFECTS
+   COMPLETE STYLESHEET
 ========================================= */
 
-/* Smooth weather transitions */
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --navy: #061d45;
+    --blue: #0a3671;
+    --cyan: #50d4f5;
+    --glass: rgba(255,255,255,.09);
+    --text: #f4f9ff;
+    --muted: #bdd1eb;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    transition:
-        background 2s ease,
-        filter 2s ease;
+    margin: 0;
+    min-height: 100vh;
     overflow-x: hidden;
+    background: radial-gradient(circle at 10% 0%,#165da1 0,#082b60 36%,#041630 100%);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color: var(--text);
+    transition: background 2s ease, filter 2s ease;
 }
 
-/* Keep app above animated background */
-.app {
-    position: relative;
-    z-index: 2;
-}
+/* =========================================
+   ANIMATED BACKGROUND ATMOSPHERE
+========================================= */
 
-/* Animated atmosphere */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.35;
-
+    opacity: .35;
     background:
-        radial-gradient(
-            ellipse at 15% 20%,
-            rgba(255,255,255,.16),
-            transparent 35%
-        ),
-        radial-gradient(
-            ellipse at 80% 10%,
-            rgba(110,200,255,.13),
-            transparent 40%
-        );
-
+        radial-gradient(ellipse at 15% 20%,rgba(255,255,255,.16),transparent 35%),
+        radial-gradient(ellipse at 80% 10%,rgba(110,200,255,.13),transparent 40%);
     animation: atmosphereMove 18s ease-in-out infinite alternate;
 }
 
 @keyframes atmosphereMove {
-    0% {
+    from {
         transform: scale(1) translateX(-2%);
     }
-
-    100% {
+    to {
         transform: scale(1.15) translateX(2%);
     }
 }
 
 /* =========================================
-   MOVING CLOUDS
+   WEATHER BACKGROUND LAYERS
 ========================================= */
 
 .weather-clouds {
@@ -137,15 +127,12 @@ body::before {
     from {
         transform: translateX(0);
     }
-
     to {
         transform: translateX(calc(100vw + 500px));
     }
 }
 
-/* =========================================
-   SUN GLOW
-========================================= */
+/* SUN */
 
 .sun-glow {
     position: fixed;
@@ -156,46 +143,27 @@ body::before {
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,220,100,.35) 0%,
-            rgba(255,190,70,.15) 35%,
-            transparent 70%
-        );
-
+    background: radial-gradient(
+        circle,
+        rgba(255,220,100,.35) 0%,
+        rgba(255,190,70,.15) 35%,
+        transparent 70%
+    );
     animation: sunPulse 6s ease-in-out infinite alternate;
 }
 
 @keyframes sunPulse {
-    0% {
+    from {
         transform: scale(.9);
         opacity: .6;
     }
-
-    100% {
+    to {
         transform: scale(1.15);
         opacity: 1;
     }
 }
 
-/* Sunny weather */
-
-body.weather-sunny {
-    background:
-        radial-gradient(
-            circle at 85% 5%,
-            #f7a928 0,
-            #277fbe 25%,
-            #08346b 65%,
-            #041630 100%
-        );
-}
-
-/* =========================================
-   RAIN
-========================================= */
+/* RAIN */
 
 .rain-layer {
     position: fixed;
@@ -207,27 +175,19 @@ body.weather-sunny {
     transition: opacity 1.5s ease;
 }
 
-body.weather-rain .rain-layer {
-    opacity: 1;
-}
-
 .raindrops {
     position: absolute;
     inset: -100px 0 0 0;
-
-    background-image:
-        repeating-linear-gradient(
-            115deg,
-            transparent 0px,
-            transparent 9px,
-            rgba(190,225,255,.25) 10px,
-            rgba(190,225,255,.25) 11px,
-            transparent 12px,
-            transparent 24px
-        );
-
+    background-image: repeating-linear-gradient(
+        115deg,
+        transparent 0px,
+        transparent 9px,
+        rgba(190,225,255,.25) 10px,
+        rgba(190,225,255,.25) 11px,
+        transparent 12px,
+        transparent 24px
+    );
     background-size: 100px 180px;
-
     animation: rainFall .55s linear infinite;
 }
 
@@ -241,185 +201,527 @@ body.weather-rain .rain-layer {
     from {
         transform: translateY(-100px);
     }
-
     to {
         transform: translateY(180px);
     }
 }
 
-/* Rainy atmosphere */
-
-body.weather-rain {
-    background:
-        linear-gradient(
-            180deg,
-            #354c69 0%,
-            #193858 40%,
-            #071a34 100%
-        );
-}
-
 /* =========================================
-   CLOUDY WEATHER
+   WEATHER SCENES
 ========================================= */
 
+body.weather-sunny {
+    background: radial-gradient(
+        circle at 85% 5%,
+        #f7a928 0,
+        #277fbe 25%,
+        #08346b 65%,
+        #041630 100%
+    );
+}
+
+body.weather-partly {
+    background: radial-gradient(
+        circle at 85% 8%,
+        #f7c65b 0,
+        #3e91c8 28%,
+        #0b3970 65%,
+        #041630 100%
+    );
+}
+
 body.weather-cloudy {
-    background:
-        linear-gradient(
-            180deg,
-            #587b9d 0%,
-            #24486f 45%,
-            #071a36 100%
-        );
+    background: linear-gradient(
+        180deg,
+        #587b9d 0%,
+        #24486f 45%,
+        #071a36 100%
+    );
 }
 
 body.weather-cloudy .cloud {
     opacity: .65;
 }
 
-/* =========================================
-   THUNDERSTORM
-========================================= */
-
-body.weather-storm {
-    background:
-        linear-gradient(
-            180deg,
-            #202a3b 0%,
-            #111e33 45%,
-            #030c1c 100%
-        );
+body.weather-rain {
+    background: linear-gradient(
+        180deg,
+        #354c69 0%,
+        #193858 40%,
+        #071a34 100%
+    );
 }
 
+body.weather-rain .rain-layer,
 body.weather-storm .rain-layer {
     opacity: 1;
 }
 
 body.weather-storm {
+    background: linear-gradient(
+        180deg,
+        #202a3b 0%,
+        #111e33 45%,
+        #030c1c 100%
+    );
     animation: stormFlash 9s infinite;
 }
 
 @keyframes stormFlash {
-    0%, 93%, 96%, 100% {
+    0%,93%,96%,100% {
         filter: brightness(1);
     }
-
     94% {
         filter: brightness(1.8);
     }
-
     95% {
         filter: brightness(1.1);
     }
 }
 
-/* =========================================
-   PARTLY CLOUDY
-========================================= */
-
-body.weather-partly {
-    background:
-        radial-gradient(
-            circle at 85% 8%,
-            #f7c65b 0,
-            #3e91c8 28%,
-            #0b3970 65%,
-            #041630 100%
-        );
-}
-
-/* =========================================
-   HOT WEATHER
-========================================= */
-
 body.weather-hot .sun-glow {
     width: 450px;
     height: 450px;
     opacity: 1;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,230,100,.42),
-            rgba(255,155,40,.2) 40%,
-            transparent 72%
-        );
+    background: radial-gradient(
+        circle,
+        rgba(255,230,100,.42),
+        rgba(255,155,40,.2) 40%,
+        transparent 72%
+    );
 }
 
 /* =========================================
-   WEATHER ICON ANIMATIONS
+   APP CONTAINER
 ========================================= */
 
-.weather-icon {
-    animation: iconFloat 4s ease-in-out infinite;
+.app {
+    max-width: 850px;
+    margin: auto;
+    padding: 18px 14px 35px;
+    position: relative;
+    z-index: 2;
 }
 
-@keyframes iconFloat {
-    0%, 100% {
+/* Only show the selected application view */
+
+.app-view {
+    display: none;
+    animation: viewAppear .35s ease;
+}
+
+.app-view.active-view {
+    display: block;
+}
+
+@keyframes viewAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
         transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-/* Rain icons */
-
-body.weather-rain .weather-icon {
-    animation: rainIcon 2s ease-in-out infinite;
-}
-
-@keyframes rainIcon {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(4px);
     }
 }
 
 /* =========================================
-   PANEL HOVER EFFECTS
+   TOP BAR
 ========================================= */
+
+.topbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 13px;
+    padding: 8px 4px 18px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.brand-icon {
+    font-size: 34px;
+}
+
+.brand strong {
+    letter-spacing: 1.5px;
+    font-size: 17px;
+    display: block;
+}
+
+.brand small {
+    color: #9bc8f5;
+    letter-spacing: 1px;
+}
+
+.menu-button,
+.refresh,
+.sound-toggle {
+    flex-shrink: 0;
+    border: 1px solid rgba(142,209,255,.3);
+    background: rgba(255,255,255,.12);
+    color: white;
+    border-radius: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .25s ease;
+}
+
+.menu-button {
+    width: 43px;
+    height: 43px;
+    font-size: 25px;
+}
+
+.refresh,
+.sound-toggle {
+    width: 43px;
+    height: 43px;
+    font-size: 21px;
+}
+
+.menu-button:hover,
+.refresh:hover,
+.sound-toggle:hover {
+    background: rgba(80,212,245,.22);
+    transform: scale(1.05);
+}
+
+.refresh:hover {
+    transform: rotate(25deg);
+}
+
+.sound-toggle {
+    font-size: 19px;
+}
+
+/* =========================================
+   HERO AND PANELS
+========================================= */
+
+.hero,
+.panel {
+    background: linear-gradient(
+        145deg,
+        rgba(33,120,197,.34),
+        rgba(4,24,59,.58)
+    );
+    border: 1px solid rgba(142,209,255,.18);
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    backdrop-filter: blur(12px);
+}
+
+.hero {
+    padding: 22px 20px 18px;
+}
 
 .panel {
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
+    padding: 17px;
+    margin-top: 14px;
+    transition: transform .25s ease,border-color .25s ease,box-shadow .25s ease;
 }
 
 @media (hover:hover) {
     .panel:hover {
         transform: translateY(-3px);
         border-color: rgba(120,220,255,.4);
-        box-shadow:
-            0 20px 45px rgba(0,0,0,.24),
-            0 0 20px rgba(70,180,255,.08);
+        box-shadow: 0 20px 45px rgba(0,0,0,.24);
     }
 }
 
 /* =========================================
-   BUTTON ANIMATIONS
+   CURRENT WEATHER
 ========================================= */
 
-.refresh {
-    transition:
-        transform .3s ease,
-        background .3s ease;
+.location {
+    font-size: 17px;
+    font-weight: 650;
 }
 
-.refresh:hover {
-    background: rgba(255,255,255,.25);
-    transform: rotate(25deg);
+.live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #50eea0;
+    border-radius: 50%;
+    margin-left: 7px;
+    box-shadow: 0 0 9px #50eea0;
+}
+
+.live-label {
+    font-size: 10px;
+    color: #70f5b6;
+    letter-spacing: 1px;
+}
+
+.updated {
+    font-size: 12px;
+    color: #a8c6e6;
+    margin-top: 5px;
+}
+
+.current {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 14px 0 0;
+}
+
+.weather-icon {
+    font-size: 70px;
+    filter: drop-shadow(0 5px 12px #00162f);
+    animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%,100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+body.weather-rain .weather-icon {
+    animation: rainIcon 2s ease-in-out infinite;
+}
+
+@keyframes rainIcon {
+    0%,100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+.temp {
+    font-size: 64px;
+    line-height: 1;
+    font-weight: 750;
+    letter-spacing: -3px;
+}
+
+.condition {
+    font-size: 18px;
+    color: #d8eaff;
+    margin-top: 5px;
+}
+
+.feels {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 5px 0 18px 4px;
+}
+
+/* WEATHER STATISTICS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 9px;
+}
+
+.stat {
+    background: rgba(1,16,43,.35);
+    border-radius: 15px;
+    padding: 12px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat span {
+    font-size: 18px;
+}
+
+.stat small {
+    color: #b7cce5;
+    font-size: 11px;
+}
+
+.stat strong {
+    font-size: 15px;
+}
+
+/* =========================================
+   SECTION HEADINGS
+========================================= */
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.section-title h2 {
+    font-size: 17px;
+    margin: 0;
+}
+
+.section-title > span {
+    font-size: 12px;
+    color: #a9c8e7;
+}
+
+/* =========================================
+   TODAY'S OUTLOOK
+========================================= */
+
+.today-summary {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 8px;
+}
+
+.today-summary div {
+    background: var(--glass);
+    border-radius: 12px;
+    padding: 12px 8px;
+}
+
+.today-summary span {
+    display: block;
+    font-size: 11px;
+    color: #bbd2e9;
+    margin-bottom: 5px;
+}
+
+.today-summary strong {
+    font-size: 14px;
+}
+
+/* =========================================
+   HOURLY FORECAST
+========================================= */
+
+.hourly {
+    display: flex;
+    gap: 9px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.hour {
+    min-width: 70px;
+    text-align: center;
+    background: var(--glass);
+    padding: 10px 8px;
+    border-radius: 13px;
+}
+
+.hour time {
+    font-size: 11px;
+    color: #c0d7ee;
+}
+
+.hour .ico {
+    font-size: 24px;
+    margin: 7px 0;
+}
+
+.hour strong {
+    font-size: 15px;
+    display: block;
+}
+
+.hour small {
+    font-size: 10px;
+    color: #8edbff;
+    display: block;
+    margin-top: 5px;
+}
+
+/* =========================================
+   SEVEN-DAY FORECAST
+========================================= */
+
+.forecast {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.day {
+    display: grid;
+    grid-template-columns: 1.1fr 45px .7fr 1fr .6fr;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    padding: 9px 11px;
+    border-radius: 12px;
+}
+
+.dayname {
+    font-size: 13px;
+}
+
+.day .ico {
+    font-size: 22px;
+    text-align: center;
+}
+
+.range {
+    font-size: 13px;
+}
+
+.low {
+    color: #a9c9e9;
+}
+
+.rain {
+    font-size: 11px;
+    color: #9be3ff;
+    text-align: right;
+}
+
+/* =========================================
+   WEATHER SUMMARY
+========================================= */
+
+.select-label {
+    display: block;
+    color: #bad2e9;
+    font-size: 12px;
+    margin: 0 0 8px;
+}
+
+.summary-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.summary-controls select {
+    min-width: 0;
+    flex: 1;
+    color: #f4f9ff;
+    background: #092c5b;
+    border: 1px solid #4a83b8;
+    border-radius: 12px;
+    padding: 12px;
+    font: inherit;
 }
 
 .summary-controls button {
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
+    background: #36b9e9;
+    color: #06234b;
+    border: 0;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
 }
 
 .summary-controls button:hover {
@@ -427,32 +729,32 @@ body.weather-rain .weather-icon {
     box-shadow: 0 5px 15px rgba(0,0,0,.2);
 }
 
-/* =========================================
-   ACCESSIBILITY
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-    }
-
+.story {
+    margin-top: 14px;
+    background: rgba(1,16,43,.35);
+    border-left: 3px solid #50d4f5;
+    border-radius: 12px;
+    padding: 14px;
+    line-height: 1.65;
+    font-size: 14px;
+    min-height: 74px;
 }
 
-/* ==========================================
-   CHOMA WEATHER - RAIN ALERT DESIGN
-   TIVANNAH INNOVATIONS
-========================================== */
+.story-note {
+    font-size: 10px;
+    color: #9ebbd8;
+    margin: 9px 2px 0;
+}
+
+/* =========================================
+   RAIN ALERT
+========================================= */
 
 .rain-alert-panel {
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.15);
-    transition: all 0.4s ease;
+    border: 1px solid rgba(255,255,255,.15);
+    transition: all .4s ease;
 }
 
 .rain-alert-content {
@@ -462,9 +764,9 @@ body.weather-rain .weather-icon {
     padding: 20px;
     margin-top: 12px;
     border-radius: 16px;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,.08);
     backdrop-filter: blur(12px);
-    transition: all 0.4s ease;
+    transition: all .4s ease;
 }
 
 .rain-alert-icon {
@@ -482,7 +784,7 @@ body.weather-rain .weather-icon {
     display: block;
     font-size: 18px;
     margin-bottom: 7px;
-    color: #ffffff;
+    color: #fff;
 }
 
 .rain-alert-text p {
@@ -492,123 +794,48 @@ body.weather-rain .weather-icon {
     color: #dceaff;
 }
 
-/* CLEAR WEATHER */
-
 .rain-alert-panel.alert-clear .rain-alert-content {
-    background: rgba(34,197,94,0.13);
-    border: 1px solid rgba(34,197,94,0.35);
+    background: rgba(34,197,94,.13);
+    border: 1px solid rgba(34,197,94,.35);
 }
-
-/* POSSIBLE SHOWERS */
 
 .rain-alert-panel.alert-possible .rain-alert-content {
-    background: rgba(250,204,21,0.13);
-    border: 1px solid rgba(250,204,21,0.4);
+    background: rgba(250,204,21,.13);
+    border: 1px solid rgba(250,204,21,.4);
 }
-
-/* RAIN LIKELY */
 
 .rain-alert-panel.alert-rain .rain-alert-content {
-    background: rgba(239,68,68,0.15);
-    border: 1px solid rgba(239,68,68,0.45);
+    background: rgba(239,68,68,.15);
+    border: 1px solid rgba(239,68,68,.45);
 }
 
-/* THUNDERSTORM */
-
 .rain-alert-panel.alert-storm .rain-alert-content {
-    background: rgba(139,92,246,0.17);
-    border: 1px solid rgba(139,92,246,0.5);
+    background: rgba(139,92,246,.17);
+    border: 1px solid rgba(139,92,246,.5);
     animation: stormAlertGlow 2s ease-in-out infinite;
 }
 
-/* ICON ANIMATION */
-
 @keyframes rainIconFloat {
-    0%, 100% {
+    0%,100% {
         transform: translateY(0);
     }
-
     50% {
         transform: translateY(-7px);
     }
 }
 
-/* STORM WARNING ANIMATION */
-
 @keyframes stormAlertGlow {
-    0%, 100% {
+    0%,100% {
         box-shadow: 0 0 0 rgba(139,92,246,0);
     }
-
     50% {
-        box-shadow: 0 0 22px rgba(139,92,246,0.25);
+        box-shadow: 0 0 22px rgba(139,92,246,.25);
     }
 }
 
-/* MOBILE RESPONSIVENESS */
-
-@media (max-width: 600px) {
-
-    .rain-alert-content {
-        padding: 15px;
-        gap: 12px;
-    }
-
-    .rain-alert-icon {
-        font-size: 34px;
-        min-width: 40px;
-    }
-
-    .rain-alert-text strong {
-        font-size: 16px;
-    }
-
-    .rain-alert-text p {
-        font-size: 12px;
-    }
-
-}
 /* =========================================
-   CHOMA WEATHER - NEW NAVIGATION SYSTEM
-   TIVANNAH INNOVATIONS
+   SIDE NAVIGATION
 ========================================= */
-
-/* TOP BAR WITH HAMBURGER */
-
-.topbar {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 13px;
-}
-
-.brand {
-    flex: 1;
-    min-width: 0;
-}
-
-.menu-button {
-    width: 43px;
-    height: 43px;
-    flex-shrink: 0;
-    border: 1px solid rgba(142,209,255,.3);
-    border-radius: 13px;
-    background: rgba(255,255,255,.12);
-    color: white;
-    font-size: 25px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: .25s ease;
-}
-
-.menu-button:hover {
-    background: rgba(80,212,245,.2);
-    transform: scale(1.05);
-}
-
-/* SLIDING MENU BACKDROP */
 
 .menu-overlay {
     position: fixed;
@@ -618,7 +845,7 @@ body.weather-rain .weather-icon {
     z-index: 9998;
     opacity: 0;
     visibility: hidden;
-    transition: opacity .3s ease, visibility .3s ease;
+    transition: opacity .3s ease,visibility .3s ease;
 }
 
 .menu-overlay.active {
@@ -626,13 +853,11 @@ body.weather-rain .weather-icon {
     visibility: visible;
 }
 
-/* SIDE MENU */
-
 .side-menu {
     position: fixed;
     top: 0;
     left: 0;
-    width: min(320px, 88vw);
+    width: min(320px,88vw);
     height: 100dvh;
     overflow-y: auto;
     padding: 22px 18px;
@@ -689,7 +914,8 @@ body.weather-rain .weather-icon {
     transition: .2s ease;
 }
 
-.menu-links a:hover {
+.menu-links a:hover,
+.menu-links a.active {
     background: rgba(80,212,245,.14);
     color: #50d4f5;
     padding-left: 16px;
@@ -708,7 +934,7 @@ body.weather-rain .weather-icon {
     margin: 10px 0;
 }
 
-/* DOWNLOAD AND SHARE */
+/* MENU ACTION BUTTONS */
 
 .menu-action {
     width: 100%;
@@ -722,7 +948,7 @@ body.weather-rain .weather-icon {
     font-size: 12px;
     letter-spacing: .4px;
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease;
+    transition: transform .2s ease,box-shadow .2s ease;
 }
 
 .menu-action:hover {
@@ -753,58 +979,7 @@ body.weather-rain .weather-icon {
 }
 
 /* =========================================
-   ABOUT APP
-========================================= */
-
-.about-app {
-    margin-top: 18px;
-    padding: 23px 19px;
-    border-radius: 21px;
-    background: linear-gradient(
-        145deg,
-        rgba(33,120,197,.27),
-        rgba(4,24,59,.65)
-    );
-    border: 1px solid rgba(142,209,255,.2);
-    box-shadow: 0 15px 35px rgba(0,0,0,.16);
-    line-height: 1.7;
-}
-
-.about-app h2 {
-    margin: 0 0 13px;
-    color: #50d4f5;
-    font-size: 19px;
-}
-
-.about-app p {
-    color: #d8eaff;
-    font-size: 13px;
-}
-
-.about-app h3 {
-    color: #50d4f5;
-    font-size: 14px;
-    margin-top: 22px;
-}
-
-.contact-link {
-    display: inline-block;
-    padding: 12px 18px;
-    border-radius: 11px;
-    background: linear-gradient(135deg,#50d4f5,#168bd1);
-    color: #061d45;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 850;
-    transition: .2s ease;
-}
-
-.contact-link:hover {
-    transform: translateY(-2px);
-}
-
-/* =========================================
-   WEATHER ADVISORY CARDS
+   WEATHER ADVISORY
 ========================================= */
 
 .advisory-panel {
@@ -894,9 +1069,145 @@ body.weather-rain .weather-icon {
     cursor: pointer;
 }
 
-/* MOBILE MENU */
+/* =========================================
+   ABOUT APP
+========================================= */
+
+.about-app {
+    margin-top: 18px;
+    padding: 23px 19px;
+    border-radius: 21px;
+    background: linear-gradient(
+        145deg,
+        rgba(33,120,197,.27),
+        rgba(4,24,59,.65)
+    );
+    border: 1px solid rgba(142,209,255,.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,.16);
+    line-height: 1.7;
+}
+
+.about-app h2 {
+    margin: 0 0 13px;
+    color: #50d4f5;
+    font-size: 19px;
+}
+
+.about-app p {
+    color: #d8eaff;
+    font-size: 13px;
+}
+
+.about-app h3 {
+    color: #50d4f5;
+    font-size: 14px;
+    margin-top: 22px;
+}
+
+.contact-link {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 11px;
+    background: linear-gradient(135deg,#50d4f5,#168bd1);
+    color: #061d45;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 850;
+    transition: .2s ease;
+}
+
+.contact-link:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    text-align: center;
+    color: #a9c5e3;
+    font-size: 11px;
+    padding: 20px 5px;
+}
+
+footer a {
+    color: #83d8ff;
+}
+
+.footer-brand {
+    color: #d7e9fb;
+    font-weight: 600;
+}
+
+.footer-brand strong {
+    letter-spacing: 1.4px;
+    color: #fff;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+========================================= */
+
+@media(max-width:600px) {
+    .rain-alert-content {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .rain-alert-icon {
+        font-size: 34px;
+        min-width: 40px;
+    }
+
+    .rain-alert-text strong {
+        font-size: 16px;
+    }
+
+    .rain-alert-text p {
+        font-size: 12px;
+    }
+}
 
 @media(max-width:430px) {
+    .app {
+        padding: 12px;
+    }
+
+    .hero {
+        padding: 18px 14px;
+    }
+
+    .temp {
+        font-size: 58px;
+    }
+
+    .stats {
+        gap: 6px;
+    }
+
+    .stat {
+        padding: 10px 4px;
+    }
+
+    .today-summary {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .day {
+        grid-template-columns: 1fr 35px .65fr 1fr .55fr;
+        gap: 4px;
+        padding: 8px;
+    }
+
+    .rain {
+        font-size: 10px;
+    }
+
+    .section-title h2 {
+        font-size: 16px;
+    }
+
     .side-menu {
         width: min(300px,88vw);
     }
@@ -908,5 +1219,30 @@ body.weather-rain .weather-icon {
 
     .about-app {
         padding: 19px 15px;
+    }
+}
+
+@media(max-width:380px) {
+    .summary-controls {
+        flex-direction: column;
+    }
+
+    .summary-controls button {
+        padding: 12px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media(prefers-reduced-motion:reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
     }
 }
