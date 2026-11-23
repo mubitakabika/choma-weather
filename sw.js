@@ -4,7 +4,7 @@
 // VERSION 4
 // ==========================================
 
-const CACHE_NAME = "choma-weather-v4";
+const CACHE_NAME = "choma-weather-v5";
 
 const APP_FILES = [
     "./index.html",
