@@ -11,6 +11,7 @@ const API = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${
 const $ = id => document.getElementById(id);
 
 let latestWeatherData = null;
+let weatherSoundEnabled = false;
 
 
 // ==========================================
@@ -1567,8 +1568,6 @@ window.generateWeatherAdvisory = function(type) {
 // ==========================================
 
 let weatherAudioContext = null;
-
-let weatherSoundEnabled = false;
 
 let sceneSoundNodes = [];
 
