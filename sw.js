@@ -1,14 +1,12 @@
 // ==========================================
 // CHOMA WEATHER SERVICE WORKER
 // Created by TIVANNAH INNOVATIONS
+// VERSION 4
 // ==========================================
 
-// CHANGE THIS VERSION WHENEVER THE APP IS UPDATED.
-
-const CACHE_NAME = "choma-weather-v3";
+const CACHE_NAME = "choma-weather-v4";
 
 const APP_FILES = [
-    "./",
     "./index.html",
     "./style.css",
     "./app.js",
@@ -27,13 +25,9 @@ self.addEventListener("install", event => {
 
         caches.open(CACHE_NAME)
 
-            .then(cache => {
-                return cache.addAll(APP_FILES);
-            })
+            .then(cache => cache.addAll(APP_FILES))
 
-            .then(() => {
-                return self.skipWaiting();
-            })
+            .then(() => self.skipWaiting())
 
     );
 
@@ -42,7 +36,7 @@ self.addEventListener("install", event => {
 
 // ==========================================
 // ACTIVATE NEW VERSION
-// REMOVE OLD CACHES
+// DELETE OLD APP CACHES
 // ==========================================
 
 self.addEventListener("activate", event => {
@@ -68,9 +62,7 @@ self.addEventListener("activate", event => {
 
             })
 
-            .then(() => {
-                return self.clients.claim();
-            })
+            .then(() => self.clients.claim())
 
     );
 
@@ -78,7 +70,8 @@ self.addEventListener("activate", event => {
 
 
 // ==========================================
-// FETCH AND UPDATE APP FILES
+// FETCH APP FILES
+// NETWORK FIRST, OFFLINE FALLBACK
 // ==========================================
 
 self.addEventListener("fetch", event => {
@@ -87,21 +80,13 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(request.url);
 
-    // Do not cache weather API requests.
-
-    if (
-        url.hostname === "api.open-meteo.com"
-    ) {
-        return;
-    }
-
     // Only handle GET requests.
 
     if (request.method !== "GET") {
         return;
     }
 
-    // Only handle requests from this website.
+    // Ignore external websites and services.
 
     if (url.origin !== self.location.origin) {
         return;
@@ -113,21 +98,16 @@ self.addEventListener("fetch", event => {
             cache: "no-store"
         })
 
-            .then(response => {
+            .then(async response => {
 
-                if (
-                    response &&
-                    response.ok &&
-                    response.status === 200
-                ) {
+                if (response && response.ok) {
 
-                    const copy = response.clone();
+                    const cache = await caches.open(CACHE_NAME);
 
-                    caches.open(CACHE_NAME)
-
-                        .then(cache => {
-                            cache.put(request, copy);
-                        });
+                    await cache.put(
+                        request,
+                        response.clone()
+                    );
 
                 }
 
@@ -137,8 +117,7 @@ self.addEventListener("fetch", event => {
 
             .catch(async () => {
 
-                // If internet is unavailable,
-                // load the saved version.
+                // First, look for the requested file.
 
                 const cached = await caches.match(request);
 
@@ -146,13 +125,17 @@ self.addEventListener("fetch", event => {
                     return cached;
                 }
 
-                // If a page is unavailable offline,
-                // return the saved homepage.
+                // If a page cannot load offline,
+                // open the saved homepage.
 
                 if (request.mode === "navigate") {
 
-                    const homepage =
-                        await caches.match("./index.html");
+                    const homepageURL = new URL(
+                        "./index.html",
+                        self.registration.scope
+                    );
+
+                    const homepage = await caches.match(homepageURL);
 
                     if (homepage) {
                         return homepage;
