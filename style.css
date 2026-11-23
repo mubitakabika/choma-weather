@@ -1246,3 +1246,15 @@ footer a {
         scroll-behavior: auto !important;
     }
 }
+
+/* FIX: CHOMA WEATHER HEADER LOGO SIZE */
+
+.brand-icon {
+    width: 52px !important;
+    height: 52px !important;
+    max-width: 52px !important;
+    max-height: 52px !important;
+    object-fit: contain;
+    display: block;
+    flex: 0 0 52px;
+}
