@@ -9,8 +9,9 @@ const LON = 27.0600;
 const API = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset,uv_index_max&timezone=Africa%2FLusaka&forecast_days=7`;
 
 const $ = id => document.getElementById(id);
-// Stores the latest weather data for the advisory features
+
 let latestWeatherData = null;
+
 
 // ==========================================
 // WEATHER ICONS AND CONDITIONS
@@ -64,6 +65,8 @@ function dayName(iso, index) {
 }
 
 function dateLong(iso) {
+    if (!iso) return '--';
+
     return new Date(iso + 'T12:00:00')
         .toLocaleDateString('en', {
             weekday: 'long',
@@ -72,22 +75,108 @@ function dateLong(iso) {
         });
 }
 
+
+// ==========================================
+// ROTATING WEATHER SCENES
+// IMPORTANT:
+// These scenes rotate independently of
+// the actual weather forecast.
+// ==========================================
+
+const weatherScenes = [
+    'weather-sunny',
+    'weather-rain',
+    'weather-storm',
+    'weather-cloudy',
+    'weather-partly'
+];
+
+let currentScene = '';
+
+function rotateWeatherScene() {
+
+    let previousIndex = -1;
+
+    try {
+        previousIndex = Number(
+            localStorage.getItem('chomaWeatherSceneIndex')
+        );
+
+        if (
+            !Number.isInteger(previousIndex) ||
+            previousIndex < 0 ||
+            previousIndex >= weatherScenes.length
+        ) {
+            previousIndex = -1;
+        }
+
+    } catch (error) {
+        previousIndex = -1;
+    }
+
+    const nextIndex =
+        (previousIndex + 1) % weatherScenes.length;
+
+    currentScene = weatherScenes[nextIndex];
+
+    try {
+        localStorage.setItem(
+            'chomaWeatherSceneIndex',
+            String(nextIndex)
+        );
+    } catch (error) {
+        console.warn('Could not save scene rotation:', error);
+    }
+
+    document.body.classList.remove(
+        ...weatherScenes,
+        'weather-hot'
+    );
+
+    document.body.classList.add(currentScene);
+
+    // If sound is already enabled, change it
+    // to match the newly selected scene.
+
+    if (weatherSoundEnabled) {
+        startSceneSound(currentScene);
+    }
+
+}
+
+
+// Rotate immediately when the app opens.
+
+rotateWeatherScene();
+
+
 // ==========================================
 // LOAD WEATHER DATA
 // ==========================================
 
 async function loadWeather() {
 
-    $('status').textContent = 'Updating weather data…';
+    const status = $('status');
+    const refreshButton = $('refreshBtn');
 
-    $('refreshBtn').classList.add('spin');
+    if (status) {
+        status.textContent = 'Updating weather data…';
+    }
+
+    if (refreshButton) {
+        refreshButton.classList.add('spin');
+    }
 
     try {
 
-        const res = await fetch(API, { cache: 'no-store' });
+        const res = await fetch(API, {
+            cache: 'no-store'
+        });
 
         if (!res.ok) {
-            throw new Error('Weather service returned ' + res.status);
+            throw new Error(
+                'Weather service returned ' + res.status
+            );
         }
 
         const d = await res.json();
@@ -95,16 +184,19 @@ async function loadWeather() {
         const c = d.current;
         const daily = d.daily;
         const hourly = d.hourly;
-        // Make the latest forecast available to all advisory features
-latestWeatherData = {
-    current: c,
-    daily: daily,
-    hourly: hourly
-};
 
         if (!c || !daily || !hourly) {
             throw new Error('Weather data is incomplete');
         }
+
+        // Make the latest forecast available
+        // to all advisory features.
+
+        latestWeatherData = {
+            current: c,
+            daily: daily,
+            hourly: hourly
+        };
 
         // ==========================================
         // CURRENT WEATHER
@@ -112,104 +204,77 @@ latestWeatherData = {
 
         const [icon, desc] = w(c.weather_code);
 
-        // ==========================================
-        // DYNAMIC WEATHER BACKGROUND
-        // ==========================================
-
-        document.body.classList.remove(
-            'weather-sunny',
-            'weather-cloudy',
-            'weather-partly',
-            'weather-rain',
-            'weather-storm',
-            'weather-hot'
-        );
-
-        const code = c.weather_code;
-
-        // THUNDERSTORMS
-
-        if ([95, 96, 99].includes(code)) {
-
-            document.body.classList.add('weather-storm');
-
-        // RAIN AND SHOWERS
-
-        } else if (
-            [51, 53, 55, 56, 57, 61, 63, 65,
-             66, 67, 80, 81, 82].includes(code)
-        ) {
-
-            document.body.classList.add('weather-rain');
-
-        // PARTLY CLOUDY
-
-        } else if ([2].includes(code)) {
-
-            document.body.classList.add('weather-partly');
-
-        // CLOUDY OR FOGGY
-
-        } else if ([3, 45, 48].includes(code)) {
-
-            document.body.classList.add('weather-cloudy');
-
-        // SUNNY
-
-        } else if ([0, 1].includes(code)) {
-
-            document.body.classList.add('weather-sunny');
-
-        }
-
-        // HOT WEATHER EFFECT
-
-        if (c.temperature_2m >= 32) {
-
-            document.body.classList.add('weather-hot');
-
-        }
+        // IMPORTANT:
+        // The background is NOT changed here.
+        // It rotates independently on page reload
+        // or when the user presses refresh.
 
         // ==========================================
         // DISPLAY WEATHER INFORMATION
         // ==========================================
 
-        $('weatherIcon').textContent = icon;
+        if ($('weatherIcon')) {
+            $('weatherIcon').textContent = icon;
+        }
 
-        $('temperature').textContent =
-            Math.round(c.temperature_2m) + '°';
+        if ($('temperature')) {
+            $('temperature').textContent =
+                Math.round(c.temperature_2m) + '°';
+        }
 
-        $('condition').textContent = desc;
+        if ($('condition')) {
+            $('condition').textContent = desc;
+        }
 
-        $('feels').textContent =
-            Math.round(c.apparent_temperature) + '°C';
+        if ($('feels')) {
+            $('feels').textContent =
+                Math.round(c.apparent_temperature) + '°C';
+        }
 
-        $('humidity').textContent =
-            (c.relative_humidity_2m ?? '--') + '%';
+        if ($('humidity')) {
+            $('humidity').textContent =
+                (c.relative_humidity_2m ?? '--') + '%';
+        }
 
-        $('wind').textContent =
-            Math.round(c.wind_speed_10m ?? 0) + ' km/h';
+        if ($('wind')) {
+            $('wind').textContent =
+                Math.round(c.wind_speed_10m ?? 0) + ' km/h';
+        }
 
-        $('pressure').textContent =
-            Math.round(c.surface_pressure ?? 0) + ' hPa';
+        if ($('pressure')) {
+            $('pressure').textContent =
+                Math.round(c.surface_pressure ?? 0) + ' hPa';
+        }
 
-        $('uv').textContent =
-            daily.uv_index_max?.[0] ?? '--';
+        if ($('uv')) {
+            $('uv').textContent =
+                daily.uv_index_max?.[0] ?? '--';
+        }
 
-        $('todayDate').textContent =
-            dateLong(daily.time?.[0]);
+        if ($('todayDate')) {
+            $('todayDate').textContent =
+                dateLong(daily.time?.[0]);
+        }
 
-        $('sunrise').textContent =
-            fmtTime(daily.sunrise?.[0]);
+        if ($('sunrise')) {
+            $('sunrise').textContent =
+                fmtTime(daily.sunrise?.[0]);
+        }
 
-        $('sunset').textContent =
-            fmtTime(daily.sunset?.[0]);
+        if ($('sunset')) {
+            $('sunset').textContent =
+                fmtTime(daily.sunset?.[0]);
+        }
 
-        $('rainToday').textContent =
-            (daily.precipitation_probability_max?.[0] ?? 0) + '%';
+        if ($('rainToday')) {
+            $('rainToday').textContent =
+                (daily.precipitation_probability_max?.[0] ?? 0) + '%';
+        }
 
-        $('rainAmount').textContent =
-            (daily.precipitation_sum?.[0] ?? 0) + ' mm';
+        if ($('rainAmount')) {
+            $('rainAmount').textContent =
+                (daily.precipitation_sum?.[0] ?? 0) + ' mm';
+        }
 
         // ==========================================
         // UPDATED TIME
@@ -217,12 +282,14 @@ latestWeatherData = {
 
         const now = new Date();
 
-        $('updated').textContent =
-            'Updated ' +
-            now.toLocaleTimeString('en-ZM', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+        if ($('updated')) {
+            $('updated').textContent =
+                'Updated ' +
+                now.toLocaleTimeString('en-ZM', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+        }
 
         // ==========================================
         // FORECASTS
@@ -232,7 +299,9 @@ latestWeatherData = {
 
         renderDaily(daily);
 
+        // ==========================================
         // RAIN ALERT
+        // ==========================================
 
         updateRainAlert(hourly);
 
@@ -241,30 +310,39 @@ latestWeatherData = {
         // ==========================================
 
         setupSummaryPicker(daily.time);
+
         setupAdvisoryDatePicker(daily.time);
 
-        $('summaryBtn').onclick = () => {
+        if ($('summaryBtn')) {
 
-            generateSummary(
-                $('summaryDate').value,
-                hourly,
-                daily
-            );
+            $('summaryBtn').onclick = () => {
 
-        };
+                generateSummary(
+                    $('summaryDate')?.value,
+                    hourly,
+                    daily
+                );
 
-        $('summaryDate').onchange = () => {
+            };
 
-            generateSummary(
-                $('summaryDate').value,
-                hourly,
-                daily
-            );
+        }
 
-        };
+        if ($('summaryDate')) {
+
+            $('summaryDate').onchange = () => {
+
+                generateSummary(
+                    $('summaryDate').value,
+                    hourly,
+                    daily
+                );
+
+            };
+
+        }
 
         generateSummary(
-            $('summaryDate').value || daily.time[0],
+            $('summaryDate')?.value || daily.time[0],
             hourly,
             daily
         );
@@ -273,23 +351,30 @@ latestWeatherData = {
         // STATUS
         // ==========================================
 
-        $('status').textContent =
-            'Automatically refreshes every 10 minutes · Data by Open-Meteo';
+        if (status) {
+            status.textContent =
+                'Automatically refreshes every 10 minutes · Data by Open-Meteo';
+        }
 
     } catch (e) {
 
-        $('status').textContent =
-            'Could not load weather. Check your internet connection and try again.';
+        if (status) {
+            status.textContent =
+                'Could not load weather. Check your internet connection and try again.';
+        }
 
         console.error('Weather loading error:', e);
 
     } finally {
 
-        $('refreshBtn').classList.remove('spin');
+        if (refreshButton) {
+            refreshButton.classList.remove('spin');
+        }
 
     }
 
 }
+
 
 // ==========================================
 // HOURLY FORECAST
@@ -299,8 +384,10 @@ function renderHourly(h) {
 
     if (!h || !Array.isArray(h.time)) {
 
-        $('hourly').innerHTML =
-            'Hourly forecast unavailable.';
+        if ($('hourly')) {
+            $('hourly').innerHTML =
+                'Hourly forecast unavailable.';
+        }
 
         return;
 
@@ -353,6 +440,7 @@ function renderHourly(h) {
     ).join('');
 
 }
+
 
 // ==========================================
 // SEVEN-DAY FORECAST
@@ -409,6 +497,7 @@ function renderDaily(d) {
     }).join('');
 
 }
+
 
 // ==========================================
 // SIX-HOUR RAIN ALERT
@@ -470,14 +559,9 @@ function updateRainAlert(h) {
     let message;
     let className;
 
-    // ==========================================
-    // THUNDERSTORM ALERT
-    // ==========================================
-
     if (thunder) {
 
         icon = '⛈️';
-
         title = 'Thunderstorm possible';
 
         message =
@@ -485,14 +569,9 @@ function updateRainAlert(h) {
 
         className = 'alert-storm';
 
-    // ==========================================
-    // HIGH RAIN CHANCE
-    // ==========================================
-
     } else if (maxChance >= 70) {
 
         icon = '🔴';
-
         title = 'Rain likely';
 
         message =
@@ -500,14 +579,9 @@ function updateRainAlert(h) {
 
         className = 'alert-rain';
 
-    // ==========================================
-    // MODERATE RAIN CHANCE
-    // ==========================================
-
     } else if (maxChance >= 40) {
 
         icon = '🟡';
-
         title = 'Showers possible';
 
         message =
@@ -515,14 +589,9 @@ function updateRainAlert(h) {
 
         className = 'alert-possible';
 
-    // ==========================================
-    // NO SIGNIFICANT RAIN
-    // ==========================================
-
     } else {
 
         icon = '🟢';
-
         title = 'No rain expected';
 
         message =
@@ -531,10 +600,6 @@ function updateRainAlert(h) {
         className = 'alert-clear';
 
     }
-
-    // ==========================================
-    // RAIN TIMING
-    // ==========================================
 
     let timing = '';
 
@@ -549,10 +614,6 @@ function updateRainAlert(h) {
             `${first !== last ? '–' + fmtTime(h.time[last]) : ''}.`;
 
     }
-
-    // ==========================================
-    // DISPLAY ALERT
-    // ==========================================
 
     box.innerHTML = `
         <div class="rain-alert-icon">${icon}</div>
@@ -583,6 +644,7 @@ function updateRainAlert(h) {
 
 }
 
+
 // ==========================================
 // SUMMARY DATE SELECTOR
 // ==========================================
@@ -606,12 +668,11 @@ function setupSummaryPicker(days) {
     }).join('');
 
     if (days.includes(prior)) {
-
         sel.value = prior;
-
     }
 
 }
+
 
 // ==========================================
 // GENERATE NATURAL-LANGUAGE WEATHER SUMMARY
@@ -656,10 +717,6 @@ function generateSummary(date, h, d) {
 
     }
 
-    // ==========================================
-    // FIND HOURLY DATA FOR SELECTED DAY
-    // ==========================================
-
     const ids = h.time
         .map((t, i) => t.slice(0, 10) === date ? i : -1)
         .filter(i => i >= 0);
@@ -673,19 +730,11 @@ function generateSummary(date, h, d) {
 
     }
 
-    // ==========================================
-    // TEMPERATURES
-    // ==========================================
-
     const max =
         Math.round(d.temperature_2m_max?.[di] ?? 0);
 
     const min =
         Math.round(d.temperature_2m_min?.[di] ?? 0);
-
-    // ==========================================
-    // WARMEST HOUR
-    // ==========================================
 
     const peak = ids.reduce((best, i) => {
 
@@ -701,10 +750,6 @@ function generateSummary(date, h, d) {
 
     const peakTime = fmtTime(h.time[peak]);
 
-    // ==========================================
-    // DATE LABEL
-    // ==========================================
-
     const label = new Date(date + 'T12:00:00')
         .toLocaleDateString('en-ZM', {
             weekday: 'long',
@@ -713,37 +758,19 @@ function generateSummary(date, h, d) {
             year: 'numeric'
         });
 
-    // ==========================================
-    // GENERAL WEATHER DESCRIPTION
-    // ==========================================
-
     let mood;
 
     if (max >= 32) {
-
         mood = 'very hot';
-
     } else if (max >= 28) {
-
         mood = 'hot';
-
     } else if (max >= 24) {
-
         mood = 'warm';
-
     } else if (max >= 19) {
-
         mood = 'mild';
-
     } else {
-
         mood = 'cool';
-
     }
-
-    // ==========================================
-    // RAIN FORECAST
-    // ==========================================
 
     const rainProbability =
         Array.isArray(h.precipitation_probability)
@@ -800,10 +827,6 @@ function generateSummary(date, h, d) {
 
     }
 
-    // ==========================================
-    // EVENING TEMPERATURE
-    // ==========================================
-
     const evening = ids.filter(i =>
         Number(h.time[i].slice(11, 13)) >= 17
     );
@@ -815,10 +838,6 @@ function generateSummary(date, h, d) {
             ] ?? min
         )
         : min;
-
-    // ==========================================
-    // MOST COMMON WEATHER CONDITION
-    // ==========================================
 
     const count = {};
 
@@ -835,10 +854,6 @@ function generateSummary(date, h, d) {
         .sort((a, b) => b[1] - a[1])[0]?.[0]
         || 'variable weather';
 
-    // ==========================================
-    // FINAL SUMMARY
-    // ==========================================
-
     story.textContent =
         `${label}: It is expected to be ${mood}, reaching about ${max}°C around ${peakTime}. ` +
         `The minimum temperature is forecast at ${min}°C. ` +
@@ -847,15 +862,37 @@ function generateSummary(date, h, d) {
 
 }
 
+
 // ==========================================
 // BUTTONS AND AUTOMATIC UPDATES
 // ==========================================
 
-$('refreshBtn').addEventListener('click', loadWeather);
+// Manual refresh changes the visual scene
+// immediately, then reloads actual weather data.
+
+const refreshButton = $('refreshBtn');
+
+if (refreshButton) {
+
+    refreshButton.addEventListener('click', () => {
+
+        rotateWeatherScene();
+
+        loadWeather();
+
+    });
+
+}
+
+// Load actual weather immediately.
 
 loadWeather();
 
+// Update weather data every 10 minutes.
+// This automatic update does NOT rotate the scene.
+
 setInterval(loadWeather, 10 * 60 * 1000);
+
 
 // ==========================================
 // SERVICE WORKER
@@ -867,10 +904,13 @@ if (
 ) {
 
     navigator.serviceWorker
-        .register('./sw.js')
+        .register('./sw.js', {
+            updateViaCache: 'none'
+        })
         .catch(console.warn);
 
 }
+
 
 // ==========================================
 // CHOMA WEATHER ADVISORY SYSTEM
@@ -937,8 +977,6 @@ window.generateWeatherAdvisory = function(type) {
         panel.classList.add('active');
         return;
     }
-
-    // Find hourly records for the selected day
 
     const ids = hourly.time
         .map((time, i) =>
@@ -1521,3 +1559,435 @@ window.generateWeatherAdvisory = function(type) {
     panel.classList.add('active');
 
 };
+
+
+// ==========================================
+// WEATHER SOUND SYSTEM
+// Created by TIVANNAH INNOVATIONS
+// ==========================================
+
+let weatherAudioContext = null;
+
+let weatherSoundEnabled = false;
+
+let sceneSoundNodes = [];
+
+let soundIntervals = [];
+
+
+// ==========================================
+// CREATE AUDIO CONTEXT
+// ==========================================
+
+function getWeatherAudio() {
+
+    if (!weatherAudioContext) {
+
+        const AudioContextClass =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContextClass) {
+            console.warn('Web Audio is not supported.');
+            return null;
+        }
+
+        weatherAudioContext = new AudioContextClass();
+
+    }
+
+    return weatherAudioContext;
+
+}
+
+
+// ==========================================
+// STOP CURRENT SCENE SOUND
+// ==========================================
+
+function stopSceneSound() {
+
+    soundIntervals.forEach(interval => {
+        clearInterval(interval);
+    });
+
+    soundIntervals = [];
+
+    sceneSoundNodes.forEach(node => {
+
+        try {
+
+            if (node.stop) {
+                node.stop();
+            }
+
+            if (node.disconnect) {
+                node.disconnect();
+            }
+
+        } catch (error) {
+            // Ignore already stopped audio nodes.
+        }
+
+    });
+
+    sceneSoundNodes = [];
+
+}
+
+
+// ==========================================
+// CREATE AMBIENT NOISE
+// Rain, wind and distant thunder atmosphere
+// ==========================================
+
+function createWeatherNoise(type) {
+
+    const ctx = getWeatherAudio();
+
+    if (!ctx) return;
+
+    const bufferSize = ctx.sampleRate * 4;
+
+    const buffer = ctx.createBuffer(
+        1,
+        bufferSize,
+        ctx.sampleRate
+    );
+
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+
+        data[i] = Math.random() * 2 - 1;
+
+    }
+
+    const source = ctx.createBufferSource();
+
+    source.buffer = buffer;
+    source.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+
+    const gain = ctx.createGain();
+
+    if (type === 'rain') {
+
+        filter.type = 'lowpass';
+        filter.frequency.value = 1600;
+
+        gain.gain.value = 0.12;
+
+    } else if (type === 'wind') {
+
+        filter.type = 'lowpass';
+        filter.frequency.value = 500;
+
+        gain.gain.value = 0.09;
+
+    } else if (type === 'thunder') {
+
+        filter.type = 'lowpass';
+        filter.frequency.value = 180;
+
+        gain.gain.value = 0.18;
+
+    }
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    source.start();
+
+    sceneSoundNodes.push(source, filter, gain);
+
+}
+
+
+// ==========================================
+// BIRD CHIRPING
+// ==========================================
+
+function playBirdChirp() {
+
+    const ctx = getWeatherAudio();
+
+    if (!ctx) return;
+
+    const oscillator = ctx.createOscillator();
+
+    const gain = ctx.createGain();
+
+    const startTime = ctx.currentTime;
+
+    const frequency =
+        1500 + Math.random() * 1000;
+
+    oscillator.type = 'sine';
+
+    oscillator.frequency.setValueAtTime(
+        frequency,
+        startTime
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        frequency * 1.5,
+        startTime + 0.12
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        frequency * 0.8,
+        startTime + 0.28
+    );
+
+    gain.gain.setValueAtTime(0.001, startTime);
+
+    gain.gain.linearRampToValueAtTime(
+        0.045,
+        startTime + 0.04
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        startTime + 0.32
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.35);
+
+    sceneSoundNodes.push(oscillator, gain);
+
+}
+
+
+// ==========================================
+// DISTANT THUNDER SOUND
+// ==========================================
+
+function playThunder() {
+
+    const ctx = getWeatherAudio();
+
+    if (!ctx) return;
+
+    const oscillator = ctx.createOscillator();
+
+    const gain = ctx.createGain();
+
+    const filter = ctx.createBiquadFilter();
+
+    const startTime = ctx.currentTime;
+
+    oscillator.type = 'sawtooth';
+
+    oscillator.frequency.setValueAtTime(
+        75,
+        startTime
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        35,
+        startTime + 2.5
+    );
+
+    filter.type = 'lowpass';
+    filter.frequency.value = 180;
+
+    gain.gain.setValueAtTime(0.001, startTime);
+
+    gain.gain.linearRampToValueAtTime(
+        0.13,
+        startTime + 0.12
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        startTime + 2.8
+    );
+
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 3);
+
+    sceneSoundNodes.push(
+        oscillator,
+        filter,
+        gain
+    );
+
+}
+
+
+// ==========================================
+// START SOUND FOR SELECTED SCENE
+// ==========================================
+
+function startSceneSound(scene) {
+
+    stopSceneSound();
+
+    if (!weatherSoundEnabled) return;
+
+    const ctx = getWeatherAudio();
+
+    if (!ctx) return;
+
+    if (ctx.state === 'suspended') {
+        ctx.resume();
+    }
+
+    // SUNNY SCENE
+    // Birds chirping.
+
+    if (scene === 'weather-sunny') {
+
+        playBirdChirp();
+
+        soundIntervals.push(
+            setInterval(playBirdChirp, 2200)
+        );
+
+    }
+
+    // PARTLY CLOUDY SCENE
+    // Gentle wind and occasional birds.
+
+    else if (scene === 'weather-partly') {
+
+        createWeatherNoise('wind');
+
+        playBirdChirp();
+
+        soundIntervals.push(
+            setInterval(playBirdChirp, 4500)
+        );
+
+    }
+
+    // CLOUDY SCENE
+    // Gentle wind atmosphere.
+
+    else if (scene === 'weather-cloudy') {
+
+        createWeatherNoise('wind');
+
+    }
+
+    // RAIN SCENE
+    // Continuous rainfall.
+
+    else if (scene === 'weather-rain') {
+
+        createWeatherNoise('rain');
+
+    }
+
+    // THUNDERSTORM SCENE
+    // Rainfall, wind and occasional thunder.
+
+    else if (scene === 'weather-storm') {
+
+        createWeatherNoise('rain');
+
+        createWeatherNoise('wind');
+
+        playThunder();
+
+        soundIntervals.push(
+            setInterval(playThunder, 9000)
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// SOUND BUTTON
+// ==========================================
+
+window.toggleWeatherSound = async function() {
+
+    const ctx = getWeatherAudio();
+
+    if (!ctx) return;
+
+    weatherSoundEnabled = !weatherSoundEnabled;
+
+    const button = $('soundToggle');
+
+    if (weatherSoundEnabled) {
+
+        try {
+
+            await ctx.resume();
+
+            startSceneSound(currentScene);
+
+        } catch (error) {
+
+            console.warn('Could not start weather sound:', error);
+
+            weatherSoundEnabled = false;
+
+        }
+
+    } else {
+
+        stopSceneSound();
+
+    }
+
+    if (button) {
+
+        button.textContent =
+            weatherSoundEnabled
+                ? '🔊 Sound On'
+                : '🔇 Sound Off';
+
+        button.setAttribute(
+            'aria-label',
+            weatherSoundEnabled
+                ? 'Mute weather sounds'
+                : 'Enable weather sounds'
+        );
+
+        button.setAttribute(
+            'aria-pressed',
+            String(weatherSoundEnabled)
+        );
+
+    }
+
+};
+
+
+// ==========================================
+// INITIAL SOUND BUTTON DISPLAY
+// ==========================================
+
+const soundButton = $('soundToggle');
+
+if (soundButton) {
+
+    soundButton.textContent = '🔇 Sound Off';
+
+    soundButton.setAttribute(
+        'aria-label',
+        'Enable weather sounds'
+    );
+
+    soundButton.setAttribute(
+        'aria-pressed',
+        'false'
+    );
+
+}
