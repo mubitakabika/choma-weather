@@ -1,1 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#07366b"/><circle cx="205" cy="180" r="90" fill="#ffcf43"/><g fill="#e9f6ff"><circle cx="280" cy="255" r="95"/><circle cx="180" cy="285" r="78"/><circle cx="355" cy="290" r="72"/></g><path d="M140 340h240" stroke="#55cafa" stroke-width="28" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512"
+     width="512" height="512">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#061d45"/>
+      <stop offset="100%" stop-color="#0b5591"/>
+    </linearGradient>
+
+    <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff176"/>
+      <stop offset="100%" stop-color="#ffad33"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+
+  <!-- Sun -->
+  <circle cx="340" cy="155" r="75" fill="url(#sun)"/>
+
+  <!-- Clouds -->
+  <path d="M112 278
+           C112 231 148 199 190 205
+           C208 150 281 139 317 184
+           C344 216 330 247 330 247
+           C376 243 408 273 408 309
+           C408 348 376 369 336 369
+           H173 C134 369 112 333 112 278Z"
+        fill="#ffffff"/>
+
+  <!-- Rain -->
+  <path d="M190 389 L175 425
+           M260 389 L245 425
+           M330 389 L315 425"
+        stroke="#50d4f5"
+        stroke-width="15"
+        stroke-linecap="round"/>
+
+  <!-- Branding -->
+  <text x="256" y="470"
+        text-anchor="middle"
+        font-family="Arial, sans-serif"
+        font-size="31"
+        font-weight="bold"
+        letter-spacing="3"
+        fill="#ffffff">CHOMA WEATHER</text>
+
+</svg>
