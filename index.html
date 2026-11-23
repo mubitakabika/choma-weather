@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061d45">
+  <meta name="description" content="Live weather and forecasts for Choma, Zambia.">
+  <title>Choma Weather</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon">🌦️</span><div><strong>CHOMA WEATHER</strong><small>Know Your Weather</small></div></div>
+      <button id="refreshBtn" class="refresh" aria-label="Refresh weather">↻</button>
+    </header>
+
+    <section class="hero">
+      <div class="location"><span class="pin">📍</span> Choma, Zambia <span class="live-dot"></span><span class="live-label">LIVE</span></div>
+      <div class="updated" id="updated">Getting the latest weather…</div>
+      <div class="current">
+        <div class="weather-icon" id="weatherIcon">⛅</div>
+        <div><div class="temp" id="temperature">--°</div><div class="condition" id="condition">Loading…</div></div>
+      </div>
+      <div class="feels">Feels like <span id="feels">--°C</span></div>
+      <div class="stats">
+        <div class="stat"><span>💧</span><small>Humidity</small><strong id="humidity">--%</strong></div>
+        <div class="stat"><span>🌬️</span><small>Wind</small><strong id="wind">-- km/h</strong></div>
+        <div class="stat"><span>🌡️</span><small>Pressure</small><strong id="pressure">-- hPa</strong></div>
+        <div class="stat"><span>☀️</span><small>UV Index</small><strong id="uv">--</strong></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>Today's outlook</h2><span id="todayDate"></span></div>
+      <div class="today-summary"><div><span>Sunrise</span><strong id="sunrise">--:--</strong></div><div><span>Sunset</span><strong id="sunset">--:--</strong></div><div><span>Rain chance</span><strong id="rainToday">--%</strong></div><div><span>Rain total</span><strong id="rainAmount">-- mm</strong></div></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>Next 24 hours</h2><span>Hourly forecast</span></div>
+      <div class="hourly" id="hourly"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>7-day forecast</h2><span>Choma</span></div>
+      <div class="forecast" id="forecast"></div>
+    </section>
+
+    <footer>
+      <p>Weather forecasts powered by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.</p>
+      <p id="status">Weather data updates automatically every 10 minutes.</p>
+      <p class="footer-brand">A community weather project for Choma 🇿🇲</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
